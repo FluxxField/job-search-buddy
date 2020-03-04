@@ -40,8 +40,22 @@ Then, open up a new terminal and navigate to the server folder and run
 
 `npm start`
 
-This will start the server.At this point you should have two terminals open. One running the webpack compiler and one running the server.
+This will start the server. At this point you should have two terminals open. One running the webpack compiler and one running the server.
 
 Open up your browser of choice and go to the url: `localhost:3000`
 
 You should see 'React App!' on the page! if so, then you did everything correctly!
+
+## Packages
+### Path
+* path // Used in the webpack.config.js and the server.js files
+
+### ESLint
+* eslint // Plugins to allow for TypeScript to be used with ESLint
+* eslint-config-airbnb
+* eslint-plugin-import
+* eslint-plugin-jsx-a11y
+* eslint-plugin-react
+* eslint-plugin-react-hooks
+* @typescript-eslint/eslint-plugin
+* @typescript-eslint/parser
