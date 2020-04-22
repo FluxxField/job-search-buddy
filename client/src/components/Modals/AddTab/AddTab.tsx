@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useRef } from "react";
+import DefaultForm from "./DefaultForm/DefaultForm";
 import Portal from "../../Portal/Portal";
 import Submit from "../../Inputs/Submit/Submit";
 import styles from "./AddTab.sass";
@@ -10,26 +11,17 @@ const AddTab = ({ getNode }) => {
     getNode(node.current);
   }, [node]);
 
+  const _handleOnSubmit = (event) => {
+    event.preventDefault();
+    console.log(event.target.value);
+  };
+
   return (
     <>
       <Portal id={"root-modal"}>
         <div className={styles.wrapper} ref={node}>
           <div className={styles.box}>
-            <form>
-              <label>Would you like to upload a file?</label>
-              <Submit
-                value={"Yes"}
-                onClick={() => {}}
-                error={false}
-                errorText={""}
-              />
-              <Submit
-                value={"No"}
-                onClick={() => {}}
-                error={false}
-                errorText={""}
-              />
-            </form>
+            <DefaultForm onClick={_handleOnSubmit} />
           </div>
         </div>
       </Portal>

@@ -44,11 +44,11 @@ const ProgressTabs = ({ tabs = [] }) => {
   return (
     <>
       <div className={styles.progress_tabs}>
-        {displayTabs.map((tab) => {
+        {displayTabs.map((tab, i) => {
           if (tab === "lastTab") {
-            return <LastTab onClick={_handleOnClickAddTab} />;
+            return <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />;
           }
-          return <Tab tab={tab} />;
+          return <Tab key={`key: ${i}`} tab={tab} />;
         })}
       </div>
 
