@@ -5,7 +5,7 @@
 * TypeScript
 * Webpack
 * Babel
-* SASS / SASS Modules
+* SASS
 * Node / Express
 * ESLint - Airbnb Style guide
 
