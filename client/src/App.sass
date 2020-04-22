@@ -1,0 +1,36 @@
+=flexCenter()
+  display: flex
+  justify-content: center
+
+.wrapper
+  width: 100%
+  height: 100%
+  box-sizing: border-box
+  display: grid
+  grid-template-rows: 85% 15%
+  grid-template-columns: 15% 70% 15%
+  grid-template-areas: 'container container container' 'footer footer footer'
+
+.container
+  grid-area: container
+  height: 100vh
+  box-sizing: border-box
+  display: grid
+  grid-template-rows: 10% 90%
+  grid-template-columns: 15% 70% 15%
+  grid-template-areas: 'header header header' 'body body body'
+
+.header
+  grid-area: header
+  box-sizing: border-box
+  +flexCenter()
+
+.body
+  grid-area: body
+  box-sizing: border-box
+  +flexCenter()
+
+.footer
+  grid-area: footer
+  box-sizing: border-box
+  +flexCenter()

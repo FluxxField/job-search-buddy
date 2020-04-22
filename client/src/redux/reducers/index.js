@@ -1,6 +1,9 @@
-import { combineReducers } from 'redux';
+import userData from "./userData";
+import jobs from "./jobs";
+import currentJob from "./currentJob";
 
-const rootReducer = combineReducers({
-});
-
-export default rootReducer;
+export default {
+  userData,
+  jobs,
+  currentJob,
+};

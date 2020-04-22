@@ -107,3 +107,6 @@ dist
 # Webpack
 bundle.js
 bundle.js.map
+
+# Firebase
+firebase.config.js

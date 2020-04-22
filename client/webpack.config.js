@@ -1,23 +1,23 @@
-const path = require('path');
+const path = require("path");
 
-const SRC_DIR = path.join(__dirname, 'src');
-const DIST_DIR = path.join(__dirname, 'public');
+const SRC_DIR = path.join(__dirname, "src");
+const DIST_DIR = path.join(__dirname, "public");
 
 module.exports = {
-  mode: 'development',
+  mode: "development",
   watch: true,
-  entry: `${SRC_DIR}/index.tsx`,
+  entry: ["babel-polyfill", `${SRC_DIR}/index.tsx`],
   output: {
-    filename: 'bundle.js',
+    filename: "bundle.js",
     path: DIST_DIR,
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
   },
 
   // Enable sourcemaps for debugging webpack's output.
-  devtool: 'source-map',
+  devtool: "source-map",
 
   module: {
     rules: [
@@ -28,7 +28,7 @@ module.exports = {
         include: SRC_DIR,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader",
             options: {
               cacheDirectory: true,
             },
@@ -36,27 +36,24 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/,
+        test: /\.sass$/,
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               modules: true,
             },
           },
           {
-            loader: 'sass-loader',
-            options: {
-              modules: true,
-            },
+            loader: "sass-loader",
           },
         ],
       },
       {
-        enforce: 'pre',
+        enforce: "pre",
         test: /\.js$/,
-        loader: 'source-map-loader',
+        loader: "source-map-loader",
       },
     ],
   },

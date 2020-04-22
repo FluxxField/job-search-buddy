@@ -1,0 +1,71 @@
+=flexCenter()
+  display: flex
+  place-items: center
+  place-content: center
+
+=oneHundredPercent()
+  width: 100%
+  height: 100%
+
+.wrapper
+  width: 100%
+  margin: 0px 2% 2% 2%
+  box-sizing: border-box
+  display: grid
+  grid-template-columns: 100%
+  grid-template-rows: 5% 95%
+  grid-template-areas: 'header' 'body'
+
+.header
+  +flexCenter()
+  grid-area: header
+  h1
+    margin: 0px
+  
+.body
+  +flexCenter()
+  margin-top: 1%
+  grid-area: body
+  display: grid
+  grid-template-columns: 35% 65%
+  grid-template-rows: 100%
+  grid-template-areas: 'desc progress_tabs'
+
+.desc_wrapper
+  +oneHundredPercent()
+  grid-area: desc
+  display: flex
+  justify-content: center
+
+.desc
+  width: 100%
+  margin: 5%
+  border: 1px solid black
+  display: grid
+  grid-template-columns: 100%
+  grid-template-rows: 5% 90% 5%
+  grid-template-areas: 'desc_header' 'desc_body' 'desc_footer'
+
+.desc_header
+  +oneHundredPercent()
+  +flexCenter()
+  grid-area: desc_header
+  h2
+    margin: 0px
+
+.desc_body
+  margin: 0% 5%
+  padding: 16px
+  grid-area: desc_body
+  overflow-y: auto
+  border: 1px solid black
+
+  p
+    margin: 0px
+    margin-bottom: 16px 
+    white-space: pre-line;
+
+.desc_footer
+  +oneHundredPercent()
+  +flexCenter()
+  grid-area: desc_footer
