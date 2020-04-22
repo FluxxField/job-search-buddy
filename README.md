@@ -1,6 +1,5 @@
-# Boilerplate for React, Redux, TypeScript, Webpack, Babel, SASS, Express
+# Job Search Buddy
 
-This is just boilderplate code for a faster start to a new project for those who like to use this tech stack:
 * React
 * Redux
 * TypeScript
