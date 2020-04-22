@@ -1,10 +1,12 @@
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import DefaultForm from "./DefaultForm/DefaultForm";
+import FileForm from "./FileForm/FileForm";
+import TextForm from "./TextForm/TextForm";
 import Portal from "../../Portal/Portal";
-import Submit from "../../Inputs/Submit/Submit";
 import styles from "./AddTab.sass";
 
 const AddTab = ({ getNode }) => {
+  const [switchCase, setSwitchCase] = useState("");
   const node = useRef();
 
   useEffect(() => {
@@ -13,7 +15,9 @@ const AddTab = ({ getNode }) => {
 
   const _handleOnSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
+
+    if (event.target.value === "Yes") setSwitchCase("FileForm");
+    if (event.target.value === "No") setSwitchCase("TextForm");
   };
 
   return (
@@ -21,7 +25,16 @@ const AddTab = ({ getNode }) => {
       <Portal id={"root-modal"}>
         <div className={styles.wrapper} ref={node}>
           <div className={styles.box}>
-            <DefaultForm onClick={_handleOnSubmit} />
+            {((): any => {
+              switch (switchCase) {
+                case "FileForm":
+                  return <FileForm />;
+                case "TextForm":
+                  return <TextForm />;
+                default:
+                  return <DefaultForm onClick={_handleOnSubmit} />;
+              }
+            })()}
           </div>
         </div>
       </Portal>
