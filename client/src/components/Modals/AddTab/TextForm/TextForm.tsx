@@ -1,9 +1,27 @@
 import React from "react";
+import Text from "../../../Inputs/Text/Text";
 
-const TextForm = () => {
+const TextForm = ({ onChange, setTitle, title, desc }) => {
   return (
     <>
-      <h1>TextForm</h1>
+      <form>
+        <label>
+          Title:
+          <Text
+            type={"text"}
+            onChange={(text) => {
+              setTitle(text);
+            }}
+            error={!!title.error}
+            errorText={title.error}
+          />
+        </label>
+
+        <label>
+          Description:
+          <textarea onChange={onChange} value={desc.value} />
+        </label>
+      </form>
     </>
   );
 };
