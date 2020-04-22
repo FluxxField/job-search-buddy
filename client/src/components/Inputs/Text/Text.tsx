@@ -32,7 +32,7 @@ const Text = ({
         onChange={(event: IEvent) => onChange(event.target.value)}
         {...props}
       />
-      {error ? <div>{errorText}</div> : null}
+      {error && <div>{errorText}</div>}
     </div>
   </>
 );

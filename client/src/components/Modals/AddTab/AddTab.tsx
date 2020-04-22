@@ -1,4 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from "react";
+import { connect } from "react-redux";
+import { nameValidator } from "../../../core/utilities";
+import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
 import DefaultForm from "./DefaultForm/DefaultForm";
 import FileForm from "./FileForm/FileForm";
 import TextForm from "./TextForm/TextForm";
@@ -11,13 +14,24 @@ const AddTab = ({ getNode }) => {
   const [desc, setDesc] = useState({ value: "", error: "" });
   const node = useRef();
 
-  const _handleOnSubmit = (event) => {
+  const _handleOnSubmitDefaultForm = (event) => {
     event.preventDefault();
     if (event.target.value === "Yes") setSwitchCase("FileForm");
     if (event.target.value === "No") setSwitchCase("TextForm");
   };
 
-  const _handleOnChange = (event) => {};
+  const _handleOnSubmitTextForm = (event) => {
+    event.preventDefault();
+
+    const titleError = nameValidator(title.value);
+    const descError = nameValidator(desc.value);
+
+    if (titleError || descError) {
+      setTitle({ ...title, error: titleError });
+      setDesc({ ...desc, error: descError });
+      return;
+    }
+  };
 
   useEffect(() => {
     getNode(node.current);
@@ -35,14 +49,15 @@ const AddTab = ({ getNode }) => {
                 case "TextForm":
                   return (
                     <TextForm
-                      onChange={_handleOnChange}
-                      setTitle={setTitle}
                       title={title}
+                      setTitle={setTitle}
                       desc={desc}
+                      setDesc={setDesc}
+                      onClick={_handleOnSubmitTextForm}
                     />
                   );
                 default:
-                  return <DefaultForm onClick={_handleOnSubmit} />;
+                  return <DefaultForm onClick={_handleOnSubmitDefaultForm} />;
               }
             })()}
           </div>
@@ -52,4 +67,23 @@ const AddTab = ({ getNode }) => {
   );
 };
 
-export default memo(AddTab);
+const mapStateToProps = ({ jobs, currentJob }) => ({ jobs, currentJob });
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    setJobs: (payload: any) => {
+      dispatch({
+        type: SET_JOBS,
+        payload,
+      });
+    },
+    setCurrentJob: (payload: any) => {
+      dispatch({
+        type: SET_CURRENT_JOB,
+        payload,
+      });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(AddTab));

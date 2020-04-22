@@ -1,11 +1,35 @@
 import React from "react";
+import styles from "./TextArea.sass";
 
-const TextArea = () => {
-  return (
-    <>
-      <div></div>
-    </>
-  );
-};
+interface ITextAreaProps {
+  value: string;
+  style?: string;
+  onChange: any;
+  error: boolean;
+  errorText: string;
+  props?: any;
+}
+
+const TextArea = ({
+  value,
+  style,
+  onChange,
+  error,
+  errorText,
+  ...props
+}: ITextAreaProps) => (
+  <>
+    <div className={`${styles.wrapper} ${style}`}>
+      <textarea
+        value={value}
+        onChange={(event: any) => {
+          onChange(event.target.value);
+        }}
+        {...props}
+      />
+      {error && <div>{errorText}</div>}
+    </div>
+  </>
+);
 
 export default TextArea;
