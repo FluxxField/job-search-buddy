@@ -13,7 +13,6 @@ const AddTab = ({
   setIsHidden,
   getNode,
   currentJob,
-  jobs,
   setCurrentJob,
   setJobs,
 }) => {
@@ -54,15 +53,7 @@ const AddTab = ({
     };
 
     setCurrentJob(newCurrentJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === newCurrentJob.id) {
-          return [...acc, newCurrentJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(newCurrentJob);
 
     setIsHidden(!isHidden);
   };
@@ -101,7 +92,7 @@ const AddTab = ({
   );
 };
 
-const mapStateToProps = ({ jobs, currentJob }) => ({ jobs, currentJob });
+const mapStateToProps = ({ currentJob }) => ({ currentJob });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

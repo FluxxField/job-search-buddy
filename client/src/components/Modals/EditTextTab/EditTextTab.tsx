@@ -12,7 +12,6 @@ const EditTextTab = ({
   setIsHidden,
   getNode,
   currentJob,
-  jobs,
   setCurrentJob,
   setJobs,
 }) => {
@@ -49,15 +48,7 @@ const EditTextTab = ({
     const newCurrentJob = { ...currentJob, tabs: newTabsArray };
 
     setCurrentJob(newCurrentJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === newCurrentJob.id) {
-          return [...acc, newCurrentJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(newCurrentJob);
 
     setIsHidden(!isHidden);
   };
@@ -85,7 +76,7 @@ const EditTextTab = ({
   );
 };
 
-const mapStateToProps = ({ currentJob, jobs }) => ({ currentJob, jobs });
+const mapStateToProps = ({ currentJob }) => ({ currentJob });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

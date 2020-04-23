@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { connect } from "react-redux";
 import DashboardJob from "../../../components/DashboardJob/DashboardJob";
 import styles from "./Overview.sass";
@@ -11,13 +11,14 @@ const Overview = ({ jobs }) => (
       </div>
 
       <div className={styles.body}>
-        {jobs.map((job, i) => (
+        {[...jobs].map(([key, job]) => (
           <DashboardJob
-            key={`key:${i}`}
+            key={key}
             lastBox={false}
             job={job}
             id={job.id}
             title={job.title}
+            tabs={job.tabs}
           />
         ))}
         <DashboardJob lastBox={true} />

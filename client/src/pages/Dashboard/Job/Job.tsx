@@ -14,16 +14,7 @@ interface IJob {
   tabs: any;
 }
 
-const Job = ({
-  title,
-  id,
-  desc,
-  tabs,
-  jobs,
-  currentJob,
-  setJobs,
-  setCurrentJob,
-}) => {
+const Job = ({ title, id, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
   const [edit, setEdit] = useState({ value: desc, error: "" });
@@ -40,15 +31,7 @@ const Job = ({
     }
 
     setCurrentJob(newCurrentJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === id) {
-          return [...acc, newCurrentJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(newCurrentJob);
 
     setIsHidden(!isHidden);
   };
@@ -65,15 +48,7 @@ const Job = ({
     if (!curJob.tabs) curJob.tabs = [];
 
     setCurrentJob(curJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === curJob.id) {
-          return [...acc, curJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(curJob);
   }, []);
 
   useEffect(() => {
@@ -128,7 +103,7 @@ const Job = ({
   );
 };
 
-const mapStateToProps = ({ jobs, currentJob }) => ({ jobs, currentJob });
+const mapStateToProps = ({ currentJob }) => ({ currentJob });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
