@@ -6,12 +6,17 @@ import styles from "./ProgressTabs.sass";
 
 const ProgressTabs = ({ tabs = [] }) => {
   const [displayTabs, setDisplayTabs] = useState([]);
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHiddenAddTab, setIsHiddenAddTab] = useState(true);
+  const [isHiddenEditTextTab, setIsHiddenEditTextTab] = useState(true);
   const [node, setNode] = useState(null);
 
   const _handleOnClickAddTab = (event) => {
     event.preventDefault();
-    setIsHidden(!isHidden);
+    setIsHiddenAddTab(!isHiddenAddTab);
+  };
+
+  const _handleOnClickTextTab = (event) => {
+    event.preventDefault();
   };
 
   useEffect(() => {
@@ -31,7 +36,7 @@ const ProgressTabs = ({ tabs = [] }) => {
   useEffect(() => {
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
-      setIsHidden(!isHidden);
+      setIsHiddenAddTab(!isHiddenAddTab);
     };
 
     document.body.addEventListener("click", _handleOutsideClick, false);
@@ -58,10 +63,10 @@ const ProgressTabs = ({ tabs = [] }) => {
         })}
       </div>
 
-      {isHidden || (
+      {isHiddenAddTab || (
         <AddTab
-          isHidden={isHidden}
-          setIsHidden={setIsHidden}
+          isHidden={isHiddenAddTab}
+          setIsHidden={setIsHiddenAddTab}
           getNode={(n) => setNode(n)}
         />
       )}
