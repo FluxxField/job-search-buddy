@@ -13,7 +13,7 @@ const TextForm = ({ title, setTitle, desc, setDesc, onClick }) => {
           <Text
             style={styles.text}
             type={"text"}
-            onChange={(text) => setTitle(text)}
+            onChange={(text) => setTitle({ ...title, value: text })}
             error={!!title.error}
             errorText={title.error}
           />
@@ -24,7 +24,7 @@ const TextForm = ({ title, setTitle, desc, setDesc, onClick }) => {
           <TextArea
             style={styles.text_area}
             value={desc.value}
-            onChange={(text) => setDesc(text)}
+            onChange={(text) => setDesc({ ...desc, value: text })}
             error={!!desc.error}
             errorText={desc.error}
           />

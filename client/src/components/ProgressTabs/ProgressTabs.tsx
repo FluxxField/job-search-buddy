@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from "react";
-import Tab from "./Tab/Tab";
+import TextTab from "./TextTab/TextTab";
 import LastTab from "./LastTab/LastTab";
 import AddTab from "../Modals/AddTab/AddTab";
 import styles from "./ProgressTabs.sass";
@@ -17,14 +17,14 @@ const ProgressTabs = ({ tabs = [] }) => {
   useEffect(() => {
     switch (tabs.length) {
       case 0:
-        setDisplayTabs(["lastTab"]);
+        setDisplayTabs([{ type: "lastTab" }]);
         break;
       case 1:
       case 2:
-        setDisplayTabs([...tabs, "lastTab"]);
+        setDisplayTabs([...tabs, { type: "lastTab" }]);
         break;
       default:
-        setDisplayTabs([...tabs.slice(-2), "lastTab"]);
+        setDisplayTabs([...tabs.slice(-2), { type: "lastTab" }]);
     }
   }, [tabs]);
 
@@ -45,14 +45,26 @@ const ProgressTabs = ({ tabs = [] }) => {
     <>
       <div className={styles.progress_tabs}>
         {displayTabs.map((tab, i) => {
-          if (tab === "lastTab") {
-            return <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />;
+          switch (tab.type) {
+            case "textTab":
+              return (
+                <TextTab key={`key: ${i}`} title={tab.title} desc={tab.desc} />
+              );
+            default:
+              return (
+                <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
+              );
           }
-          return <Tab key={`key: ${i}`} tab={tab} />;
         })}
       </div>
 
-      {isHidden || <AddTab getNode={(n) => setNode(n)} />}
+      {isHidden || (
+        <AddTab
+          isHidden={isHidden}
+          setIsHidden={setIsHidden}
+          getNode={(n) => setNode(n)}
+        />
+      )}
     </>
   );
 };

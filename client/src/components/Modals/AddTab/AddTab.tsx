@@ -8,7 +8,15 @@ import TextForm from "./TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./AddTab.sass";
 
-const AddTab = ({ getNode }) => {
+const AddTab = ({
+  isHidden,
+  setIsHidden,
+  getNode,
+  currentJob,
+  jobs,
+  setCurrentJob,
+  setJobs,
+}) => {
   const [switchCase, setSwitchCase] = useState("");
   const [title, setTitle] = useState({ value: "", error: "" });
   const [desc, setDesc] = useState({ value: "", error: "" });
@@ -31,6 +39,27 @@ const AddTab = ({ getNode }) => {
       setDesc({ ...desc, error: descError });
       return;
     }
+
+    const newCurrentJob = {
+      ...currentJob,
+      tabs: [
+        ...currentJob.tabs,
+        { title: title.value, desc: desc.value, type: "textTab" },
+      ],
+    };
+
+    setCurrentJob(newCurrentJob);
+
+    setJobs(
+      jobs.reduce((acc, cur) => {
+        if (cur.id === newCurrentJob.id) {
+          return [...acc, newCurrentJob];
+        }
+        return acc;
+      }, [])
+    );
+
+    setIsHidden(!isHidden);
   };
 
   useEffect(() => {
