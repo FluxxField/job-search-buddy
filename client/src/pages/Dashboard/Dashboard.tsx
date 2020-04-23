@@ -36,7 +36,6 @@ const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
         <Route path={`${match.path}/:jobID`}>
           <Job
             title={currentJob.title}
-            id={currentJob.id}
             desc={currentJob.desc}
             tabs={currentJob.tabs}
           />

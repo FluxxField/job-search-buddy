@@ -1,44 +1,14 @@
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
-import { descValidator } from "../../../core/utilities";
 import Button from "../../../components/Button/Button";
 import ProgressTabs from "../../../components/ProgressTabs/ProgressTabs";
 import styles from "./Job.sass";
 import EditDesc from "../../../components/Modals/EditDesc/EditDesc";
 
-interface IJob {
-  title: string;
-  id: string | number;
-  desc: string;
-  tabs: any;
-}
-
-const Job = ({ title, id, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
+const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
-  const [edit, setEdit] = useState({ value: desc, error: "" });
-
-  const _handleOnClickEdit = (event) => {
-    event.preventDefault();
-
-    const newCurrentJob = { ...currentJob, desc: edit.value };
-    const editError = descValidator(edit.value);
-
-    if (editError) {
-      setEdit({ ...edit, error: editError });
-      return;
-    }
-
-    setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
-
-    setIsHidden(!isHidden);
-  };
-
-  const _handleOnChange = (event) => {
-    setEdit({ ...edit, value: event.target.value });
-  };
 
   // Assigns default values to the currentJob if it does not have any
   useEffect(() => {
@@ -92,11 +62,11 @@ const Job = ({ title, id, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
 
       {isHidden || (
         <EditDesc
+          title={title}
+          desc={desc}
+          isHidden={isHidden}
+          setIsHidden={setIsHidden}
           getNode={(n) => setNode(n)}
-          onClick={_handleOnClickEdit}
-          onChange={_handleOnChange}
-          edit={edit.value}
-          error={edit.error}
         />
       )}
     </>

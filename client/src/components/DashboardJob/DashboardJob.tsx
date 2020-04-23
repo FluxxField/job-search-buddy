@@ -83,7 +83,7 @@ const DashboardJob = ({
         </Button>
         {lastBox ||
           tabs.map((tab) => {
-            return <div className={styles.progress_tab} />;
+            return <div key={tab.id} className={styles.progress_tab} />;
           })}
       </div>
       {isHidden || (
