@@ -21,6 +21,7 @@ const TextArea = ({
   <>
     <div className={`${styles.wrapper} ${style}`}>
       <textarea
+        className={styles.text_area}
         value={value}
         onChange={(event: any) => {
           onChange(event.target.value);
