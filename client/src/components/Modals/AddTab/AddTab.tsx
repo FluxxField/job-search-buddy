@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { nameValidator } from "../../../core/utilities";
+import { titleValidator, descValidator } from "../../../core/utilities";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
 import DefaultForm from "./DefaultForm/DefaultForm";
 import FileForm from "./FileForm/FileForm";
@@ -8,7 +8,14 @@ import TextForm from "./TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./AddTab.sass";
 
-const AddTab = ({ getNode }) => {
+const AddTab = ({
+  isHidden,
+  setIsHidden,
+  getNode,
+  currentJob,
+  setCurrentJob,
+  setJobs,
+}) => {
   const [switchCase, setSwitchCase] = useState("");
   const [title, setTitle] = useState({ value: "", error: "" });
   const [desc, setDesc] = useState({ value: "", error: "" });
@@ -23,14 +30,32 @@ const AddTab = ({ getNode }) => {
   const _handleOnSubmitTextForm = (event) => {
     event.preventDefault();
 
-    const titleError = nameValidator(title.value);
-    const descError = nameValidator(desc.value);
+    const titleError = titleValidator(title.value);
+    const descError = descValidator(desc.value);
 
     if (titleError || descError) {
       setTitle({ ...title, error: titleError });
       setDesc({ ...desc, error: descError });
       return;
     }
+
+    const newCurrentJob = {
+      ...currentJob,
+      tabs: [
+        ...currentJob.tabs,
+        {
+          id: currentJob.tabs.length,
+          title: title.value,
+          desc: desc.value,
+          type: "textTab",
+        },
+      ],
+    };
+
+    setCurrentJob(newCurrentJob);
+    setJobs(newCurrentJob);
+
+    setIsHidden(!isHidden);
   };
 
   useEffect(() => {
@@ -67,7 +92,7 @@ const AddTab = ({ getNode }) => {
   );
 };
 
-const mapStateToProps = ({ jobs, currentJob }) => ({ jobs, currentJob });
+const mapStateToProps = ({ currentJob }) => ({ currentJob });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

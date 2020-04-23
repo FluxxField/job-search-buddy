@@ -78,6 +78,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
         <label className={styles.label}>
           Email:
           <Text
+            value={email.value}
             onChange={(text) => setEmail({ value: text, error: "" })}
             type={"text"}
             error={!!email.error}
@@ -88,6 +89,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
         <label className={styles.label}>
           Password:
           <Text
+            value={password.value}
             onChange={(text) => setPassword({ value: text, error: "" })}
             type={"password"}
             error={!!password.error}

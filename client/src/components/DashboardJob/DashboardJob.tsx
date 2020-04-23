@@ -1,10 +1,10 @@
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { nameValidator } from "../../core/utilities";
+import { titleValidator } from "../../core/utilities";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../redux/actions";
 import Button from "../Button/Button";
-import NewJob from "../Modals/AddJob/AddJob";
+import AddJob from "../Modals/AddJob/AddJob";
 import md5 from "md5";
 import styles from "./DashboardJob.sass";
 
@@ -13,9 +13,9 @@ interface IDashboardJobProps {
   job?: any;
   id?: string | number;
   title?: string;
-  jobs: Array<object>;
   setJobs: any;
   setCurrentJob: any;
+  tabs?: any;
 }
 
 const DashboardJob = ({
@@ -23,7 +23,7 @@ const DashboardJob = ({
   job,
   id,
   title,
-  jobs,
+  tabs,
   setJobs,
   setCurrentJob,
 }: IDashboardJobProps) => {
@@ -36,7 +36,7 @@ const DashboardJob = ({
   const _handleOnClick = (event) => {
     event.preventDefault();
 
-    const titleError = nameValidator(newJobTitle.value);
+    const titleError = titleValidator(newJobTitle.value);
     const jobID = md5(newJobTitle.value);
     const currentJobObject = { id: jobID, title: newJobTitle.value };
 
@@ -45,8 +45,8 @@ const DashboardJob = ({
       return;
     }
 
+    setJobs(currentJobObject);
     setCurrentJob(currentJobObject);
-    setJobs([...jobs, currentJobObject]);
 
     history.push(`${match.path}/${jobID}`);
   };
@@ -81,10 +81,13 @@ const DashboardJob = ({
         <Button style={styles.title_box} onClick={_handleButtonClick}>
           {title || "+"}
         </Button>
-        {lastBox || <div className={styles.progress_tab} />}
+        {lastBox ||
+          tabs.map((tab) => {
+            return <div className={styles.progress_tab} />;
+          })}
       </div>
       {isHidden || (
-        <NewJob
+        <AddJob
           getNode={(n: object) => setNode(n)}
           setTitle={setNewJobTitle}
           onClick={_handleOnClick}
@@ -95,7 +98,7 @@ const DashboardJob = ({
   );
 };
 
-const mapStateToProps = ({ jobs }) => ({ jobs });
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

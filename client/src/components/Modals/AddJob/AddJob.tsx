@@ -4,7 +4,7 @@ import Text from "../../Inputs/Text/Text";
 import Submit from "../../Inputs/Submit/Submit";
 import styles from "./AddJob.sass";
 
-const NewJob = ({ getNode, onClick, setTitle, title }) => {
+const AddJob = ({ getNode, onClick, setTitle, title }) => {
   const node = useRef();
 
   useEffect(() => {
@@ -20,6 +20,7 @@ const NewJob = ({ getNode, onClick, setTitle, title }) => {
               <label className={styles.label}>
                 Title:
                 <Text
+                  value={title.value}
                   style={styles.text_input}
                   onChange={(text) => setTitle({ value: text, error: "" })}
                   type={"text"}
@@ -43,4 +44,4 @@ const NewJob = ({ getNode, onClick, setTitle, title }) => {
   );
 };
 
-export default memo(NewJob);
+export default memo(AddJob);

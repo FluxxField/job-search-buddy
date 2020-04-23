@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
-import { nameValidator } from "../../../core/utilities";
+import { descValidator } from "../../../core/utilities";
 import Button from "../../../components/Button/Button";
 import ProgressTabs from "../../../components/ProgressTabs/ProgressTabs";
 import styles from "./Job.sass";
@@ -14,16 +14,7 @@ interface IJob {
   tabs: any;
 }
 
-const Job = ({
-  title,
-  id,
-  desc,
-  tabs,
-  jobs,
-  currentJob,
-  setJobs,
-  setCurrentJob,
-}) => {
+const Job = ({ title, id, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
   const [edit, setEdit] = useState({ value: desc, error: "" });
@@ -32,7 +23,7 @@ const Job = ({
     event.preventDefault();
 
     const newCurrentJob = { ...currentJob, desc: edit.value };
-    const editError = nameValidator(edit.value);
+    const editError = descValidator(edit.value);
 
     if (editError) {
       setEdit({ ...edit, error: editError });
@@ -40,15 +31,7 @@ const Job = ({
     }
 
     setCurrentJob(newCurrentJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === id) {
-          return [...acc, newCurrentJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(newCurrentJob);
 
     setIsHidden(!isHidden);
   };
@@ -65,15 +48,7 @@ const Job = ({
     if (!curJob.tabs) curJob.tabs = [];
 
     setCurrentJob(curJob);
-
-    setJobs(
-      jobs.reduce((acc, cur) => {
-        if (cur.id === curJob.id) {
-          return [...acc, curJob];
-        }
-        return acc;
-      }, [])
-    );
+    setJobs(curJob);
   }, []);
 
   useEffect(() => {
@@ -128,7 +103,7 @@ const Job = ({
   );
 };
 
-const mapStateToProps = ({ jobs, currentJob }) => ({ jobs, currentJob });
+const mapStateToProps = ({ currentJob }) => ({ currentJob });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
