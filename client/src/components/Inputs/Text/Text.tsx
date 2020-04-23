@@ -3,6 +3,7 @@ import styles from "./Text.sass";
 
 interface ITextProps {
   onChange(text: string): void;
+  value: string;
   type: string;
   error?: boolean;
   errorText?: string;
@@ -18,6 +19,7 @@ interface ITarget {
 }
 
 const Text = ({
+  value,
   error,
   errorText,
   type,
@@ -28,6 +30,7 @@ const Text = ({
   <>
     <div className={`${styles.wrapper} ${style}`}>
       <input
+        value={value}
         type={type}
         onChange={(event: IEvent) => onChange(event.target.value)}
         {...props}

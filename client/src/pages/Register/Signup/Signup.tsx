@@ -86,6 +86,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
         <label className={styles.label}>
           Name:
           <Text
+            value={name.value}
             onChange={(text) => setName({ value: text, error: "" })}
             type={"text"}
             error={!!name.error}
@@ -96,6 +97,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
         <label className={styles.label}>
           Email:
           <Text
+            value={email.value}
             onChange={(text) => setEmail({ value: text, error: "" })}
             type={"text"}
             error={!!email.error}
@@ -106,6 +108,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
         <label className={styles.label}>
           Password:
           <Text
+            value={password.one}
             onChange={(text) =>
               setPassword({ ...password, one: text, error: "" })
             }
@@ -118,6 +121,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
         <label className={styles.label}>
           Repeat Password:
           <Text
+            value={password.two}
             onChange={(text) =>
               setPassword({ ...password, two: text, error: "" })
             }

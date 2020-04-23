@@ -89,8 +89,6 @@ const Job = ({
     };
   }, [node]);
 
-  console.log(tabs);
-
   return (
     <>
       <div className={styles.wrapper}>

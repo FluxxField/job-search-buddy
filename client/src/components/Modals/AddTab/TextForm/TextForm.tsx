@@ -13,6 +13,7 @@ const TextForm = ({ title, setTitle, desc, setDesc, onClick }) => {
           <Text
             style={styles.text}
             type={"text"}
+            value={title.value}
             onChange={(text) => setTitle({ ...title, value: text })}
             error={!!title.error}
             errorText={title.error}

@@ -27,8 +27,6 @@ const EditTextTab = ({
   const node = useRef();
 
   const _handleOnSubmitTextForm = (event) => {
-    event.preventDefault();
-
     const titleError = titleValidator(desc.value);
     const descError = descValidator(desc.value);
 
@@ -38,7 +36,28 @@ const EditTextTab = ({
       return;
     }
 
-    const newCurrentJob = { ...currentJob };
+    const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
+      if (cur.id === id) {
+        return [
+          ...acc,
+          { id, title: title.value, desc: desc.value, type: "textTab" },
+        ];
+      }
+      return [...acc, cur];
+    }, []);
+
+    const newCurrentJob = { ...currentJob, tabs: newTabsArray };
+
+    setCurrentJob(newCurrentJob);
+
+    setJobs(
+      jobs.reduce((acc, cur) => {
+        if (cur.id === newCurrentJob.id) {
+          return [...acc, newCurrentJob];
+        }
+        return acc;
+      }, [])
+    );
 
     setIsHidden(!isHidden);
   };

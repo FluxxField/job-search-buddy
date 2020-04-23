@@ -65,10 +65,12 @@ const ProgressTabs = ({ tabs = [] }) => {
                   onClick={_handleOnClickTextTab}
                 />
               );
-            default:
+            case "lastTab":
               return (
                 <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
               );
+            default:
+              return <h1>error</h1>;
           }
         })}
       </div>

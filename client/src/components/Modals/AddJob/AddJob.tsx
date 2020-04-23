@@ -20,6 +20,7 @@ const NewJob = ({ getNode, onClick, setTitle, title }) => {
               <label className={styles.label}>
                 Title:
                 <Text
+                  value={title.value}
                   style={styles.text_input}
                   onChange={(text) => setTitle({ value: text, error: "" })}
                   type={"text"}
