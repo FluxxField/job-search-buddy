@@ -33,3 +33,15 @@ export const nameValidator = (name) => {
 
   return "";
 };
+
+export const titleValidator = (title) => {
+  if (!title || title.length <= 0) return "Title cannot be empty";
+
+  return "";
+};
+
+export const descValidator = (desc) => {
+  if (!desc || desc.length <= 0) return "Description cannot be empty";
+
+  return "";
+};

@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
-import { nameValidator } from "../../../core/utilities";
+import { descValidator } from "../../../core/utilities";
 import Button from "../../../components/Button/Button";
 import ProgressTabs from "../../../components/ProgressTabs/ProgressTabs";
 import styles from "./Job.sass";
@@ -32,7 +32,7 @@ const Job = ({
     event.preventDefault();
 
     const newCurrentJob = { ...currentJob, desc: edit.value };
-    const editError = nameValidator(edit.value);
+    const editError = descValidator(edit.value);
 
     if (editError) {
       setEdit({ ...edit, error: editError });

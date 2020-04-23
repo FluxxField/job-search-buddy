@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styles from "./TextTab.sass";
 import Button from "../../Button/Button";
 
-const TextTab = ({ title, desc }) => {
+const TextTab = ({ id, title, desc, onClick }) => {
   return (
     <>
       <div className={styles.wrapper}>
@@ -15,7 +15,7 @@ const TextTab = ({ title, desc }) => {
         </div>
 
         <div className={styles.footer}>
-          <Button>Edit</Button>
+          <Button onClick={(event) => onClick(event, id)}>Edit</Button>
         </div>
       </div>
     </>

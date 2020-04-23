@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { nameValidator } from "../../../core/utilities";
+import { titleValidator, descValidator } from "../../../core/utilities";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
 import DefaultForm from "./DefaultForm/DefaultForm";
 import FileForm from "./FileForm/FileForm";
@@ -31,8 +31,8 @@ const AddTab = ({
   const _handleOnSubmitTextForm = (event) => {
     event.preventDefault();
 
-    const titleError = nameValidator(title.value);
-    const descError = nameValidator(desc.value);
+    const titleError = titleValidator(title.value);
+    const descError = descValidator(desc.value);
 
     if (titleError || descError) {
       setTitle({ ...title, error: titleError });
@@ -44,7 +44,12 @@ const AddTab = ({
       ...currentJob,
       tabs: [
         ...currentJob.tabs,
-        { title: title.value, desc: desc.value, type: "textTab" },
+        {
+          id: currentJob.tabs.length,
+          title: title.value,
+          desc: desc.value,
+          type: "textTab",
+        },
       ],
     };
 

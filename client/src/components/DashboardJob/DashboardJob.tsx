@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { nameValidator } from "../../core/utilities";
+import { titleValidator } from "../../core/utilities";
 import { SET_JOBS, SET_CURRENT_JOB } from "../../redux/actions";
 import Button from "../Button/Button";
 import NewJob from "../Modals/AddJob/AddJob";
@@ -36,7 +36,7 @@ const DashboardJob = ({
   const _handleOnClick = (event) => {
     event.preventDefault();
 
-    const titleError = nameValidator(newJobTitle.value);
+    const titleError = titleValidator(newJobTitle.value);
     const jobID = md5(newJobTitle.value);
     const currentJobObject = { id: jobID, title: newJobTitle.value };
 
