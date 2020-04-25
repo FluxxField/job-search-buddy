@@ -57,7 +57,7 @@ const ProgressTabs = ({ tabs = [] }) => {
         setDisplayTabs([...tabs, { type: "lastTab" }]);
         break;
       default:
-        setDisplayTabs([...tabs.slice(-2), { type: "lastTab" }]);
+        setDisplayTabs(displayTabs);
     }
   }, [tabs]);
 
@@ -127,7 +127,6 @@ const ProgressTabs = ({ tabs = [] }) => {
                   <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
                 );
               default:
-                return <h1>error</h1>;
             }
           })}
         </div>
@@ -143,6 +142,7 @@ const ProgressTabs = ({ tabs = [] }) => {
         <AddTab
           isHidden={isHiddenAddTab}
           setIsHidden={setIsHiddenAddTab}
+          setDisplayTabs={setDisplayTabs}
           getNode={(n) => setNode(n)}
         />
       )}
@@ -152,6 +152,8 @@ const ProgressTabs = ({ tabs = [] }) => {
           id={tabID}
           isHidden={isHiddenEditTextTab}
           setIsHidden={setIsHiddenEditTextTab}
+          displayTabs={displayTabs}
+          setDisplayTabs={setDisplayTabs}
           getNode={(n) => setNode(n)}
         />
       )}

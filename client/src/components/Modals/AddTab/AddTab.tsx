@@ -11,6 +11,7 @@ import styles from "./AddTab.sass";
 const AddTab = ({
   isHidden,
   setIsHidden,
+  setDisplayTabs,
   getNode,
   currentJob,
   setCurrentJob,
@@ -54,6 +55,7 @@ const AddTab = ({
 
     setCurrentJob(newCurrentJob);
     setJobs(newCurrentJob);
+    setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
 
     setIsHidden(!isHidden);
   };
