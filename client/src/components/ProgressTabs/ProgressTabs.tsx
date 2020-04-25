@@ -62,8 +62,6 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [tabs]);
 
   useEffect(() => {
-    console.log("useEffect hide btns", displayTabs.length);
-    console.log(displayTabs);
     switch (displayTabs.length) {
       case 1:
       case 2:
@@ -90,9 +88,13 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [displayTabs]);
 
   useEffect(() => {
+    console.log(node);
+
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
-      setIsHiddenAddTab(!isHiddenAddTab);
+
+      setIsHiddenAddTab(true);
+      setIsHiddenEditTextTab(true);
     };
 
     document.body.addEventListener("click", _handleOutsideClick, false);
