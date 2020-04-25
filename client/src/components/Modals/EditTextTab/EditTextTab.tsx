@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { SET_CURRENT_JOB, SET_JOBS } from "../../../redux/actions";
-import { titleValidator, descValidator } from "../../../core/utilities";
 import TextForm from "../AddTab/TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./EditTextTab.sass";
@@ -28,15 +27,6 @@ const EditTextTab = ({
   const node = useRef();
 
   const _handleOnSubmitTextForm = (event) => {
-    const titleError = titleValidator(desc.value);
-    const descError = descValidator(desc.value);
-
-    if (titleError || descError) {
-      setTitle({ ...title, error: titleError });
-      setDesc({ ...desc, error: descError });
-      return;
-    }
-
     const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
       if (cur.id === id) {
         return [

@@ -25,15 +25,6 @@ const EditDesc = ({
   const _handleOnClick = (event) => {
     event.preventDefault();
 
-    const titleError = titleValidator(newTitle.value);
-    const descError = descValidator(newDesc.value);
-
-    if (titleError || descError) {
-      setNewTitle({ ...newTitle, error: titleError });
-      setNewDesc({ ...newDesc, error: descError });
-      return;
-    }
-
     const newCurrentJob = {
       ...currentJob,
       title: newTitle.value,
