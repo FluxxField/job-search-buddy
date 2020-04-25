@@ -62,6 +62,8 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [tabs]);
 
   useEffect(() => {
+    console.log("useEffect hide btns", displayTabs.length);
+    console.log(displayTabs);
     switch (displayTabs.length) {
       case 1:
       case 2:
