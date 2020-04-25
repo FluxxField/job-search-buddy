@@ -15,7 +15,9 @@ const TextTab = ({ id, title, desc, onClick }) => {
         </div>
 
         <div className={styles.footer}>
-          <Button onClick={(event) => onClick(event, id)}>Edit</Button>
+          <Button style={styles.button} onClick={(event) => onClick(event, id)}>
+            Edit
+          </Button>
         </div>
       </div>
     </>

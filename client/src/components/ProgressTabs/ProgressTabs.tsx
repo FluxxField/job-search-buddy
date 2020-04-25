@@ -88,8 +88,6 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [displayTabs]);
 
   useEffect(() => {
-    console.log(node);
-
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
 
