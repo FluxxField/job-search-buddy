@@ -1,0 +1,19 @@
+.hover 
+  position: relative;
+
+  &:hover &__no-hover
+    opacity: 0;
+
+  &:hover &__hover
+    opacity: 1;
+
+  &__hover
+    margin: 0 auto
+    left: 0
+    top: 0;
+    right: 0
+    position: absolute;
+    opacity: 0;
+
+  &__no_hover
+    opacity: 1;
