@@ -5,6 +5,7 @@ import AddTab from "../Modals/AddTab/AddTab";
 import EditTextTab from "../Modals/EditTextTab/EditTextTab";
 import styles from "./ProgressTabs.sass";
 import Button from "../Button/Button";
+import FileTab from "./FileTab/FileTab";
 
 const ProgressTabs = ({ tabs = [] }) => {
   const [displayTabs, setDisplayTabs] = useState([]);
@@ -88,8 +89,6 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [displayTabs]);
 
   useEffect(() => {
-    console.log(node);
-
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
 
@@ -103,6 +102,8 @@ const ProgressTabs = ({ tabs = [] }) => {
       document.body.removeEventListener("click", _handleOutsideClick, false);
     };
   }, [node]);
+
+  console.log(displayTabs);
 
   return (
     <>
@@ -126,6 +127,8 @@ const ProgressTabs = ({ tabs = [] }) => {
                     onClick={_handleOnClickTextTab}
                   />
                 );
+              case "fileTab":
+                return <FileTab title={tab.title} file={tab.file} />;
               case "lastTab":
                 return (
                   <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
