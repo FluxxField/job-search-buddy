@@ -60,13 +60,17 @@ const EditTextTab = ({
       default:
         if (displayTabs[2].type === "lastTab") {
           setDisplayTabs([
-            ...newCurrentJob.tabs.slice(displayTabs[0].id),
-            displayTabs[1].id + 1,
+            ...newCurrentJob.tabs.slice(
+              displayTabs[0].id,
+              displayTabs[1].id + 1
+            ),
           ]);
         } else {
           setDisplayTabs([
-            ...newCurrentJob.tabs.slice(displayTabs[0].id),
-            displayTabs[2].id + 1,
+            ...newCurrentJob.tabs.slice(
+              displayTabs[0].id,
+              displayTabs[2].id + 1
+            ),
           ]);
         }
     }

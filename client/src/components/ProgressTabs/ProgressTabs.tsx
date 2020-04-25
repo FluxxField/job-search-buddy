@@ -88,9 +88,13 @@ const ProgressTabs = ({ tabs = [] }) => {
   }, [displayTabs]);
 
   useEffect(() => {
+    console.log(node);
+
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
-      setIsHiddenAddTab(!isHiddenAddTab);
+
+      setIsHiddenAddTab(true);
+      setIsHiddenEditTextTab(true);
     };
 
     document.body.addEventListener("click", _handleOutsideClick, false);
