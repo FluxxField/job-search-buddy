@@ -10,7 +10,6 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
 
-  // Assigns default values to the currentJob if it does not have any
   useEffect(() => {
     const curJob = { ...currentJob };
 
