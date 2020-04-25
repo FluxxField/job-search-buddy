@@ -7,6 +7,8 @@ import Button from "../Button/Button";
 import AddJob from "../Modals/AddJob/AddJob";
 import md5 from "md5";
 import styles from "./DashboardJob.sass";
+import Hover from "../Hover/Hover";
+import TabHover from "../Hover/TabHover/TabHover";
 
 interface IDashboardJobProps {
   lastBox?: boolean;
@@ -82,9 +84,11 @@ const DashboardJob = ({
           {title || "+"}
         </Button>
         {lastBox ||
-          tabs.map((tab) => {
-            return <div key={tab.id} className={styles.progress_tab} />;
-          })}
+          tabs.map((tab) => (
+            <Hover onHover={<TabHover title={tab.title} />}>
+              <div key={tab.id} className={styles.progress_tab} />
+            </Hover>
+          ))}
       </div>
       {isHidden || (
         <AddJob

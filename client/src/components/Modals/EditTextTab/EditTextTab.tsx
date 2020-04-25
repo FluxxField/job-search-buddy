@@ -10,6 +10,8 @@ const EditTextTab = ({
   id,
   isHidden,
   setIsHidden,
+  displayTabs,
+  setDisplayTabs,
   getNode,
   currentJob,
   setCurrentJob,
@@ -49,6 +51,25 @@ const EditTextTab = ({
 
     setCurrentJob(newCurrentJob);
     setJobs(newCurrentJob);
+
+    switch (displayTabs.length) {
+      case 1:
+      case 2:
+        setDisplayTabs([...newCurrentJob.tabs, { type: "lastTab" }]);
+        break;
+      default:
+        if (displayTabs[2].type === "lastTab") {
+          setDisplayTabs([
+            ...newCurrentJob.tabs.slice(displayTabs[0].id),
+            displayTabs[1].id + 1,
+          ]);
+        } else {
+          setDisplayTabs([
+            ...newCurrentJob.tabs.slice(displayTabs[0].id),
+            displayTabs[2].id + 1,
+          ]);
+        }
+    }
 
     setIsHidden(!isHidden);
   };
