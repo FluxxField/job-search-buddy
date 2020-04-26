@@ -58,6 +58,7 @@ const EditFileTab = ({
               displayTabs[0].id,
               displayTabs[1].id + 1
             ),
+            { type: "lastTab" },
           ]);
         } else {
           setDisplayTabs([
