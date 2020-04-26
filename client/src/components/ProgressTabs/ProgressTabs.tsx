@@ -66,7 +66,11 @@ const ProgressTabs = ({ tabs = [] }) => {
         setDisplayTabs([...tabs, { type: "lastTab" }]);
         break;
       default:
-        setDisplayTabs(displayTabs);
+        setDisplayTabs(
+          displayTabs.length > 0
+            ? displayTabs
+            : [...tabs.slice(-2), { type: "lastTab" }]
+        );
     }
   }, [tabs]);
 

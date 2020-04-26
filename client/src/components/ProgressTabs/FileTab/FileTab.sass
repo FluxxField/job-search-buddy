@@ -9,8 +9,24 @@
   border: 1px solid black
   display: grid
   grid-template-columns: 100%
-  grid-template-rows: 5% 90% 5%
-  grid-template-areas: 'header' 'body' 'footer'
+  grid-template-rows: 90% 10%
+  grid-template-areas: 'body' 'footer'
+  background-color: #1e212A
+  box-shadow: 3px 3px 5px 6px #525252
+  border-radius: 25px
+
+.body
+  margin: 0% 5%
+  margin-top: -6%
+  padding: 16px
+  grid-area: body
+  overflow-y: auto
+  border: 1px solid black
+  display: flex
+  flex-direction: column
+  background-color: #7a7583
+  border-radius: 25px
+  scrollbar-width: thin
 
 .header
   +flexCenter()
@@ -20,16 +36,14 @@
   h1
     margin: 0px
 
-.body
-  margin: 0% 5%
-  padding: 16px
-  grid-area: body
-  overflow-y: auto
-  border: 1px solid black
+.file
+  display: flex
+  place-items: center
+  height: 100%
 
 .footer
   +flexCenter()
-  margin: 0px 5%
+  margin: 5%
   grid-area: footer
 
 .button

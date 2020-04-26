@@ -10,18 +10,20 @@ const FileTab = ({ id, title, file, onClick }) => {
   return (
     <>
       <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <h1>{title}</h1>
-        </div>
-
         <div className={styles.body}>
-          <Document
-            file={file}
-            onLoadSuccess={(pages) => setNumOfPages(pages)}
-            noData={"Please upload a correct file"}
-          >
-            <Page pageNumber={pageNumber} />
-          </Document>
+          <div className={styles.header}>
+            <h1>{title}</h1>
+          </div>
+
+          <div className={styles.file}>
+            <Document
+              file={file}
+              onLoadSuccess={(pages) => setNumOfPages(pages)}
+              noData={"Please upload a correct file"}
+            >
+              <Page pageNumber={pageNumber} />
+            </Document>
+          </div>
         </div>
 
         <div className={styles.footer}>

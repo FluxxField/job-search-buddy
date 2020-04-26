@@ -43,12 +43,14 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
         <div className={styles.body}>
           <div className={styles.desc_wrapper}>
             <div className={styles.desc}>
-              <div className={styles.desc_header}>
-                <h2>{title}</h2>
-              </div>
               <div className={styles.desc_body}>
-                <p>{desc}</p>
+                <div className={styles.desc_header}>
+                  <h2>{title}</h2>
+                </div>
+
+                <p className={styles.paragragh}>{desc}</p>
               </div>
+
               <div className={styles.desc_footer}>
                 <Button
                   style={styles.button}

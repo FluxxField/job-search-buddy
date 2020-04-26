@@ -5,12 +5,11 @@ import Button from "../../Button/Button";
 const TextTab = ({ id, title, desc, onClick }) => (
   <>
     <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <h1>{title}</h1>
-      </div>
-
       <div className={styles.body}>
-        <p>{desc}</p>
+        <div className={styles.header}>
+          <h1>{title}</h1>
+        </div>
+        <p className={styles.paragragh}>{desc}</p>
       </div>
 
       <div className={styles.footer}>

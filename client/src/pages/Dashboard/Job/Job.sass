@@ -43,32 +43,39 @@
   border: 1px solid black
   display: grid
   grid-template-columns: 100%
-  grid-template-rows: 5% 90% 5%
-  grid-template-areas: 'desc_header' 'desc_body' 'desc_footer'
-
-.desc_header
-  +oneHundredPercent()
-  +flexCenter()
-  grid-area: desc_header
-  h2
-    margin: 0px
+  grid-template-rows: 90% 10%
+  grid-template-areas: 'desc_body' 'desc_footer'
+  background-color: #1e212a
+  border-radius: 25px
+  box-shadow: 3px 3px 5px 6px #525252;
 
 .desc_body
   margin: 0% 5%
+  margin-top: -6%
   padding: 16px
   grid-area: desc_body
-  overflow-y: auto
   border: 1px solid black
+  background-color: #8a8372
+  border-radius: 25px
+  display: flex
+  flex-direction: column
 
-  p
+.desc_header
+  +flexCenter()
+  width: 100%
+  h2
     margin: 0px
-    margin-bottom: 16px 
-    white-space: pre-line;
+
+.paragragh
+  margin: 0px
+  margin-bottom: 16px 
+  overflow-y: auto
+  scrollbar-width: thin
+  white-space: pre-line;
 
 .desc_footer
   +flexCenter()
-  height: 100%
-  margin: 0% 5%
+  margin: 5%
   grid-area: desc_footer
 
 .button
