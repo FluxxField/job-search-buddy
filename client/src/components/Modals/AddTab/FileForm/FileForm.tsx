@@ -18,7 +18,7 @@ const FileForm = ({ title, setTitle, setFile, onClick }) => (
         />
       </label>
 
-      <label>
+      <label className={styles.label}>
         File:
         <input
           type="file"
