@@ -8,7 +8,9 @@ const UserRoutes = ({ onClick, userData, loggedIn }: any) => (
   <>
     {loggedIn ? (
       <div>
-        <Button onClick={onClick}>Signout</Button>
+        <Button style={styles.btn} onClick={onClick}>
+          Signout
+        </Button>
         <Link className={styles.link} to="/">
           {`Hello, ${
             userData.displayName &&

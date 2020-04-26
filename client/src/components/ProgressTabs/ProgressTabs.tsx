@@ -6,11 +6,13 @@ import EditTextTab from "../Modals/EditTextTab/EditTextTab";
 import styles from "./ProgressTabs.sass";
 import Button from "../Button/Button";
 import FileTab from "./FileTab/FileTab";
+import EditFileTab from "../Modals/EditFileTab/EditFileTab";
 
 const ProgressTabs = ({ tabs = [] }) => {
   const [displayTabs, setDisplayTabs] = useState([]);
   const [isHiddenAddTab, setIsHiddenAddTab] = useState(true);
   const [isHiddenEditTextTab, setIsHiddenEditTextTab] = useState(true);
+  const [isHiddenEditFileTab, setIsHiddenEditFileTab] = useState(true);
   const [isHiddenLeftBtn, setIsHiddenLeftBtn] = useState(true);
   const [isHiddenRightBtn, setIsHiddenRightBtn] = useState(true);
   const [tabID, setTabID] = useState(null);
@@ -25,6 +27,12 @@ const ProgressTabs = ({ tabs = [] }) => {
     event.preventDefault();
     setTabID(id);
     setIsHiddenEditTextTab(!isHiddenEditTextTab);
+  };
+
+  const _handleOnClickFileTab = (event, id) => {
+    event.preventDefault();
+    setTabID(id);
+    setIsHiddenEditFileTab(!isHiddenEditFileTab);
   };
 
   const _handleOnClickLeftBtn = (event) => {
@@ -58,7 +66,11 @@ const ProgressTabs = ({ tabs = [] }) => {
         setDisplayTabs([...tabs, { type: "lastTab" }]);
         break;
       default:
-        setDisplayTabs(displayTabs);
+        setDisplayTabs(
+          displayTabs.length > 0
+            ? displayTabs
+            : [...tabs.slice(-2), { type: "lastTab" }]
+        );
     }
   }, [tabs]);
 
@@ -94,6 +106,7 @@ const ProgressTabs = ({ tabs = [] }) => {
 
       setIsHiddenAddTab(true);
       setIsHiddenEditTextTab(true);
+      setIsHiddenEditFileTab(true);
     };
 
     document.body.addEventListener("click", _handleOutsideClick, false);
@@ -103,14 +116,14 @@ const ProgressTabs = ({ tabs = [] }) => {
     };
   }, [node]);
 
-  console.log(displayTabs);
-
   return (
     <>
       <div className={styles.wrapper}>
         <div className={styles.left_btn}>
           {isHiddenLeftBtn || (
-            <Button onClick={_handleOnClickLeftBtn}>{"<"}</Button>
+            <Button style={styles.btn} onClick={_handleOnClickLeftBtn}>
+              {"<"}
+            </Button>
           )}
         </div>
 
@@ -128,7 +141,15 @@ const ProgressTabs = ({ tabs = [] }) => {
                   />
                 );
               case "fileTab":
-                return <FileTab title={tab.title} file={tab.file} />;
+                return (
+                  <FileTab
+                    key={`key: ${i}`}
+                    id={tab.id}
+                    title={tab.title}
+                    file={tab.file}
+                    onClick={_handleOnClickFileTab}
+                  />
+                );
               case "lastTab":
                 return (
                   <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
@@ -140,7 +161,9 @@ const ProgressTabs = ({ tabs = [] }) => {
 
         <div className={styles.right_btn}>
           {isHiddenRightBtn || (
-            <Button onClick={_handleOnClickRightBtn}>{">"}</Button>
+            <Button style={styles.btn} onClick={_handleOnClickRightBtn}>
+              {">"}
+            </Button>
           )}
         </div>
       </div>
@@ -157,10 +180,21 @@ const ProgressTabs = ({ tabs = [] }) => {
       {isHiddenEditTextTab || (
         <EditTextTab
           id={tabID}
-          isHidden={isHiddenEditTextTab}
-          setIsHidden={setIsHiddenEditTextTab}
           displayTabs={displayTabs}
           setDisplayTabs={setDisplayTabs}
+          isHidden={isHiddenEditTextTab}
+          setIsHidden={setIsHiddenEditTextTab}
+          getNode={(n) => setNode(n)}
+        />
+      )}
+
+      {isHiddenEditFileTab || (
+        <EditFileTab
+          id={tabID}
+          displayTabs={displayTabs}
+          setDisplayTabs={setDisplayTabs}
+          isHidden={isHiddenEditFileTab}
+          setIsHidden={setIsHiddenEditFileTab}
           getNode={(n) => setNode(n)}
         />
       )}

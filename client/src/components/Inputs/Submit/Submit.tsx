@@ -23,7 +23,13 @@ const Submit = ({
 }: ISubmitProps) => (
   <>
     <div className={`${styles.wrapper} ${style}`}>
-      <input onClick={onClick} type="submit" value={value} {...props} />
+      <input
+        className={styles.input}
+        onClick={onClick}
+        type="submit"
+        value={value}
+        {...props}
+      />
       {error ? <div>{errorText}</div> : null}
     </div>
   </>

@@ -7,34 +7,43 @@
   width: 33.33%
   margin: 16px
   border: 1px solid black
+  border-radius: 25px
   display: grid
   grid-template-columns: 100%
-  grid-template-rows: 5% 90% 5%
-  grid-template-areas: 'header' 'body' 'footer'
+  grid-template-rows: 90% 10%
+  grid-template-areas: 'body' 'footer'
+  background-color: #1e212A
+  box-shadow: 3px 3px 5px 6px #525252
+
+
+.body
+  margin: 0% 5%
+  margin-top: -6%
+  padding: 16px
+  grid-area: body
+  border: 1px solid black
+  display: flex
+  flex-direction: column
+  background-color: #7a7583
+  border-radius: 25px
 
 .header
   +flexCenter()
   width: 100%
-  grid-area: header
 
   h1
     margin: 0px
 
-.body
-  margin: 0% 5%
-  padding: 16px
-  grid-area: body
+.paragragh
+  margin: 0px
+  margin-bottom: 16px 
+  white-space: pre-line
   overflow-y: auto
-  border: 1px solid black
-
-  p
-    margin: 0px
-    margin-bottom: 16px 
-    white-space: pre-line
+  scrollbar-width: thin
 
 .footer
   +flexCenter()
-  margin: 0px 5%
+  margin: 5%
   grid-area: footer
 
 .button

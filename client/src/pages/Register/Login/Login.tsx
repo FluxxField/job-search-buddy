@@ -72,7 +72,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
 
   return (
     <>
-      <h2>Login</h2>
+      <h2 className={styles.h2}>Login</h2>
 
       <form className={styles.form}>
         <label className={styles.label}>
@@ -98,6 +98,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
         </label>
 
         <Submit
+          style={styles.submit}
           onClick={_handleOnSubmit}
           value="Submit"
           error={!!error}
