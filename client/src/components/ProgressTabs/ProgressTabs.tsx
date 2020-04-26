@@ -6,11 +6,13 @@ import EditTextTab from "../Modals/EditTextTab/EditTextTab";
 import styles from "./ProgressTabs.sass";
 import Button from "../Button/Button";
 import FileTab from "./FileTab/FileTab";
+import EditFileTab from "../Modals/EditFileTab/EditFileTab";
 
 const ProgressTabs = ({ tabs = [] }) => {
   const [displayTabs, setDisplayTabs] = useState([]);
   const [isHiddenAddTab, setIsHiddenAddTab] = useState(true);
   const [isHiddenEditTextTab, setIsHiddenEditTextTab] = useState(true);
+  const [isHiddenEditFileTab, setIsHiddenEditFileTab] = useState(true);
   const [isHiddenLeftBtn, setIsHiddenLeftBtn] = useState(true);
   const [isHiddenRightBtn, setIsHiddenRightBtn] = useState(true);
   const [tabID, setTabID] = useState(null);
@@ -25,6 +27,12 @@ const ProgressTabs = ({ tabs = [] }) => {
     event.preventDefault();
     setTabID(id);
     setIsHiddenEditTextTab(!isHiddenEditTextTab);
+  };
+
+  const _handleOnClickFileTab = (event, id) => {
+    event.preventDefault();
+    setTabID(id);
+    setIsHiddenEditFileTab(!isHiddenEditFileTab);
   };
 
   const _handleOnClickLeftBtn = (event) => {
@@ -94,6 +102,7 @@ const ProgressTabs = ({ tabs = [] }) => {
 
       setIsHiddenAddTab(true);
       setIsHiddenEditTextTab(true);
+      setIsHiddenEditFileTab(true);
     };
 
     document.body.addEventListener("click", _handleOutsideClick, false);
@@ -102,8 +111,6 @@ const ProgressTabs = ({ tabs = [] }) => {
       document.body.removeEventListener("click", _handleOutsideClick, false);
     };
   }, [node]);
-
-  console.log(displayTabs);
 
   return (
     <>
@@ -128,7 +135,15 @@ const ProgressTabs = ({ tabs = [] }) => {
                   />
                 );
               case "fileTab":
-                return <FileTab title={tab.title} file={tab.file} />;
+                return (
+                  <FileTab
+                    key={`key: ${i}`}
+                    id={tab.id}
+                    title={tab.title}
+                    file={tab.file}
+                    onClick={_handleOnClickFileTab}
+                  />
+                );
               case "lastTab":
                 return (
                   <LastTab key={`key: ${i}`} onClick={_handleOnClickAddTab} />
@@ -157,10 +172,21 @@ const ProgressTabs = ({ tabs = [] }) => {
       {isHiddenEditTextTab || (
         <EditTextTab
           id={tabID}
-          isHidden={isHiddenEditTextTab}
-          setIsHidden={setIsHiddenEditTextTab}
           displayTabs={displayTabs}
           setDisplayTabs={setDisplayTabs}
+          isHidden={isHiddenEditTextTab}
+          setIsHidden={setIsHiddenEditTextTab}
+          getNode={(n) => setNode(n)}
+        />
+      )}
+
+      {isHiddenEditFileTab || (
+        <EditFileTab
+          id={tabID}
+          displayTabs={displayTabs}
+          setDisplayTabs={setDisplayTabs}
+          isHidden={isHiddenEditFileTab}
+          setIsHidden={setIsHiddenEditFileTab}
           getNode={(n) => setNode(n)}
         />
       )}

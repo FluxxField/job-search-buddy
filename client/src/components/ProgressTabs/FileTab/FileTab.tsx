@@ -3,7 +3,7 @@ import { Document, Page } from "react-pdf";
 import styles from "./FileTab.sass";
 import Button from "../../Button/Button";
 
-const FileTab = ({ title, file }) => {
+const FileTab = ({ id, title, file, onClick }) => {
   const [numOfPages, setNumOfPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -25,7 +25,9 @@ const FileTab = ({ title, file }) => {
         </div>
 
         <div className={styles.footer}>
-          <Button style={styles.button}>Edit</Button>
+          <Button style={styles.button} onClick={(event) => onClick(event, id)}>
+            Edit
+          </Button>
         </div>
       </div>
     </>
