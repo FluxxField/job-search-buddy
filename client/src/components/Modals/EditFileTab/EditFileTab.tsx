@@ -1,37 +1,41 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { SET_CURRENT_JOB, SET_JOBS } from "../../../redux/actions";
-import TextForm from "../AddTab/TextForm/TextForm";
 import Portal from "../../Portal/Portal";
-import styles from "./EditTextTab.sass";
+import styles from "./EditFileTab.sass";
+import FileForm from "../AddTab/FileForm/FileForm";
 
-const EditTextTab = ({
+const EditFileTab = ({
   id,
-  isHidden,
-  setIsHidden,
   displayTabs,
   setDisplayTabs,
+  isHidden,
+  setIsHidden,
   getNode,
   currentJob,
-  setCurrentJob,
   setJobs,
+  setCurrentJob,
 }) => {
   const [title, setTitle] = useState({
     value: currentJob.tabs[id].title,
     error: "",
   });
-  const [desc, setDesc] = useState({
-    value: currentJob.tabs[id].desc,
-    error: "",
-  });
-  const node = useRef();
+  const [file, setFile] = useState(null);
+  const node = useRef(null);
 
-  const _handleOnSubmitTextForm = (event) => {
+  const _handleOnClick = (event) => {
+    event.preventDefault();
+
     const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
       if (cur.id === id) {
         return [
           ...acc,
-          { id, title: title.value, desc: desc.value, type: "textTab" },
+          {
+            id,
+            title: title.value,
+            file: file || currentJob.tabs[id].file,
+            type: "fileTab",
+          },
         ];
       }
       return [...acc, cur];
@@ -77,12 +81,11 @@ const EditTextTab = ({
       <Portal id={"root-modal"}>
         <div className={styles.wrapper} ref={node}>
           <div className={styles.box}>
-            <TextForm
+            <FileForm
               title={title}
               setTitle={setTitle}
-              desc={desc}
-              setDesc={setDesc}
-              onClick={_handleOnSubmitTextForm}
+              setFile={setFile}
+              onClick={_handleOnClick}
             />
           </div>
         </div>
@@ -110,4 +113,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(memo(EditTextTab));
+export default connect(mapStateToProps, mapDispatchToProps)(memo(EditFileTab));

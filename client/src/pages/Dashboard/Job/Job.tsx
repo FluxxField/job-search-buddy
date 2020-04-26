@@ -10,7 +10,6 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
 
-  // Assigns default values to the currentJob if it does not have any
   useEffect(() => {
     const curJob = { ...currentJob };
 
@@ -44,14 +43,21 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
         <div className={styles.body}>
           <div className={styles.desc_wrapper}>
             <div className={styles.desc}>
-              <div className={styles.desc_header}>
-                <h2>{title}</h2>
-              </div>
               <div className={styles.desc_body}>
-                <p>{desc}</p>
+                <div className={styles.desc_header}>
+                  <h2>{title}</h2>
+                </div>
+
+                <p className={styles.paragragh}>{desc}</p>
               </div>
+
               <div className={styles.desc_footer}>
-                <Button onClick={() => setIsHidden(!isHidden)}>Edit</Button>
+                <Button
+                  style={styles.button}
+                  onClick={() => setIsHidden(!isHidden)}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
           </div>

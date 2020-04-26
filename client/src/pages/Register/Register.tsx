@@ -37,7 +37,7 @@ const Register = () => {
             </Route>
 
             <Route path={match.path}>
-              <h2>Register</h2>
+              <h2 className={styles.h2}>Register</h2>
               <Button style={styles.button} onClick={_handleOnClick}>
                 Login
               </Button>

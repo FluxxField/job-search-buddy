@@ -7,39 +7,39 @@
   width: 33.33%
   margin: 16px
   border: 1px solid black
-  border-radius: 25px
   display: grid
   grid-template-columns: 100%
   grid-template-rows: 90% 10%
   grid-template-areas: 'body' 'footer'
   background-color: #1e212A
   box-shadow: 3px 3px 5px 6px #525252
-
+  border-radius: 25px
 
 .body
   margin: 0% 5%
   margin-top: -6%
   padding: 16px
   grid-area: body
+  overflow-y: auto
   border: 1px solid black
   display: flex
   flex-direction: column
   background-color: #7a7583
   border-radius: 25px
+  scrollbar-width: thin
 
 .header
   +flexCenter()
   width: 100%
+  grid-area: header
 
   h1
     margin: 0px
 
-.paragragh
-  margin: 0px
-  margin-bottom: 16px 
-  white-space: pre-line
-  overflow-y: auto
-  scrollbar-width: thin
+.file
+  display: flex
+  place-items: center
+  height: 100%
 
 .footer
   +flexCenter()

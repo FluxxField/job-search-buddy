@@ -10,6 +10,9 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import About from "./pages/About/About";
 import Register from "./pages/Register/Register";
 import AuthLoading from "./pages/AuthLoading/AuthLoading";
+import { pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 firebase.initializeApp(firebaseConfig);
 

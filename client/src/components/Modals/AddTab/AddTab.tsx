@@ -20,6 +20,7 @@ const AddTab = ({
   const [switchCase, setSwitchCase] = useState("");
   const [title, setTitle] = useState({ value: "", error: "" });
   const [desc, setDesc] = useState({ value: "", error: "" });
+  const [file, setFile] = useState(null);
   const node = useRef();
 
   const _handleOnSubmitDefaultForm = (event) => {
@@ -60,6 +61,36 @@ const AddTab = ({
     setIsHidden(!isHidden);
   };
 
+  const _handleOnSubmitFileForm = (event) => {
+    event.preventDefault();
+
+    const titleError = titleValidator(title.value);
+
+    if (titleError) {
+      setTitle({ ...title, error: titleError });
+      return;
+    }
+
+    const newCurrentJob = {
+      ...currentJob,
+      tabs: [
+        ...currentJob.tabs,
+        {
+          id: currentJob.tabs.length,
+          title: title.value,
+          type: "fileTab",
+          file,
+        },
+      ],
+    };
+
+    setCurrentJob(newCurrentJob);
+    setJobs(newCurrentJob);
+    setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
+
+    setIsHidden(!isHidden);
+  };
+
   useEffect(() => {
     getNode(node.current);
   }, [node]);
@@ -72,7 +103,14 @@ const AddTab = ({
             {((): any => {
               switch (switchCase) {
                 case "FileForm":
-                  return <FileForm />;
+                  return (
+                    <FileForm
+                      title={title}
+                      setTitle={setTitle}
+                      setFile={setFile}
+                      onClick={_handleOnSubmitFileForm}
+                    />
+                  );
                 case "TextForm":
                   return (
                     <TextForm
