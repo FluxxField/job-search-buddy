@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { memo } from "react";
 import Text from "../../../Inputs/Text/Text";
 import Submit from "../../../Inputs/Submit/Submit";
 import styles from "./FileForm.sass";
@@ -37,4 +37,4 @@ const FileForm = ({ title, setTitle, setFile, onClick }) => (
   </>
 );
 
-export default FileForm;
+export default memo(FileForm);
