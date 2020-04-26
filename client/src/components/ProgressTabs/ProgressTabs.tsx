@@ -121,7 +121,9 @@ const ProgressTabs = ({ tabs = [] }) => {
       <div className={styles.wrapper}>
         <div className={styles.left_btn}>
           {isHiddenLeftBtn || (
-            <Button onClick={_handleOnClickLeftBtn}>{"<"}</Button>
+            <Button style={styles.btn} onClick={_handleOnClickLeftBtn}>
+              {"<"}
+            </Button>
           )}
         </div>
 
@@ -159,7 +161,9 @@ const ProgressTabs = ({ tabs = [] }) => {
 
         <div className={styles.right_btn}>
           {isHiddenRightBtn || (
-            <Button onClick={_handleOnClickRightBtn}>{">"}</Button>
+            <Button style={styles.btn} onClick={_handleOnClickRightBtn}>
+              {">"}
+            </Button>
           )}
         </div>
       </div>
