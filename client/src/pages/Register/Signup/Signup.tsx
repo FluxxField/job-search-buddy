@@ -80,7 +80,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
 
   return (
     <>
-      <h2>Signup</h2>
+      <h2 className={styles.h2}>Signup</h2>
 
       <form className={styles.form}>
         <label className={styles.label}>
@@ -132,6 +132,7 @@ const Signup = ({ userData, setUserDataDispatch }: ISignupProps) => {
         </label>
 
         <Submit
+          style={styles.submit}
           onClick={_handleOnSubmit}
           value="Submit"
           error={!!error}
