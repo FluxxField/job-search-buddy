@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { titleValidator, descValidator } from "../../../core/utilities";
-import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
+import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
 import DefaultForm from "./DefaultForm/DefaultForm";
 import FileForm from "./FileForm/FileForm";
 import TextForm from "./TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./AddTab.sass";
+import userData from "../../../redux/reducers/userData";
 
 const AddTab = ({
   isHidden,
@@ -15,7 +16,8 @@ const AddTab = ({
   getNode,
   currentJob,
   setCurrentJob,
-  setJobs,
+  userData,
+  setUserData,
 }) => {
   const [switchCase, setSwitchCase] = useState("");
   const [title, setTitle] = useState({ value: "", error: "" });
@@ -54,8 +56,9 @@ const AddTab = ({
       ],
     };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
     setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
 
     setIsHidden(!isHidden);
@@ -84,8 +87,9 @@ const AddTab = ({
       ],
     };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
     setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
 
     setIsHidden(!isHidden);
@@ -132,19 +136,22 @@ const AddTab = ({
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
-      dispatch({
-        type: SET_JOBS,
-        payload,
-      });
-    },
     setCurrentJob: (payload: any) => {
       dispatch({
         type: SET_CURRENT_JOB,
+        payload,
+      });
+    },
+    setUserData: (payload: any) => {
+      dispatch({
+        type: SET_USER_DATA,
         payload,
       });
     },

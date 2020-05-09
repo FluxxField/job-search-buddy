@@ -8,7 +8,7 @@ import Button from "../Button/Button";
 import FileTab from "./FileTab/FileTab";
 import EditFileTab from "../Modals/EditFileTab/EditFileTab";
 
-const ProgressTabs = ({ tabs = [] }) => {
+const ProgressTabs = ({ tabs }) => {
   const [displayTabs, setDisplayTabs] = useState([]);
   const [isHiddenAddTab, setIsHiddenAddTab] = useState(true);
   const [isHiddenEditTextTab, setIsHiddenEditTextTab] = useState(true);
@@ -56,6 +56,7 @@ const ProgressTabs = ({ tabs = [] }) => {
     ]);
   };
 
+  // Set the display tabs based upon the size of the current jobs tab size
   useEffect(() => {
     switch (tabs.length) {
       case 0:
@@ -74,6 +75,7 @@ const ProgressTabs = ({ tabs = [] }) => {
     }
   }, [tabs]);
 
+  // Show and hide the left and right button depending upon which tabs are currently being shown
   useEffect(() => {
     switch (displayTabs.length) {
       case 1:
@@ -100,6 +102,7 @@ const ProgressTabs = ({ tabs = [] }) => {
     }
   }, [displayTabs]);
 
+  // Handles Modal EventListeners
   useEffect(() => {
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;

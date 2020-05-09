@@ -1,23 +1,25 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useContext } from "react";
 import { connect } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { titleValidator } from "../../core/utilities";
-import { SET_JOBS, SET_CURRENT_JOB } from "../../redux/actions";
+import { titleValidator, toFirestore } from "../../core/utilities";
+import { SET_CURRENT_JOB, SET_USER_DATA } from "../../redux/actions";
 import Button from "../Button/Button";
 import AddJob from "../Modals/AddJob/AddJob";
 import md5 from "md5";
 import styles from "./DashboardJob.sass";
 import Hover from "../Hover/Hover";
 import TabHover from "../Hover/TabHover/TabHover";
+import { DatabaseContext } from "../../";
 
 interface IDashboardJobProps {
   lastBox?: boolean;
   job?: any;
   id?: string | number;
   title?: string;
-  setJobs: any;
   setCurrentJob: any;
+  setUserData: any;
   tabs?: any;
+  userData: any;
 }
 
 const DashboardJob = ({
@@ -26,14 +28,16 @@ const DashboardJob = ({
   id,
   title,
   tabs,
-  setJobs,
+  userData,
   setCurrentJob,
+  setUserData,
 }: IDashboardJobProps) => {
   const [newJobTitle, setNewJobTitle] = useState({ value: "", error: "" });
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
   const history = useHistory();
   const match = useRouteMatch();
+  const database = useContext(DatabaseContext);
 
   const _handleOnClick = (event) => {
     event.preventDefault();
@@ -41,14 +45,35 @@ const DashboardJob = ({
     const titleError = titleValidator(newJobTitle.value);
     const jobID = md5(newJobTitle.value);
     const currentJobObject = { id: jobID, title: newJobTitle.value };
+    const currentUserData = {
+      ...userData,
+      jobs: new Map([...userData.jobs, [jobID, currentJobObject]]),
+    };
 
     if (titleError) {
       setNewJobTitle({ ...newJobTitle, error: titleError });
       return;
     }
 
-    setJobs(currentJobObject);
     setCurrentJob(currentJobObject);
+    setUserData(currentUserData);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...currentUserData,
+              jobs: toFirestore(currentUserData.jobs), // Cannot store a map
+            });
+        });
+      });
 
     history.push(`${match.path}/${jobID}`);
   };
@@ -84,11 +109,12 @@ const DashboardJob = ({
           {title || "+"}
         </Button>
         {lastBox ||
-          tabs.map((tab) => (
-            <Hover onHover={<TabHover title={tab.title} />}>
-              <div key={tab.id} className={styles.progress_tab} />
-            </Hover>
-          ))}
+          (tabs &&
+            tabs.map((tab) => (
+              <Hover onHover={<TabHover title={tab.title} />}>
+                <div key={tab.id} className={styles.progress_tab} />
+              </Hover>
+            )))}
       </div>
       {isHidden || (
         <AddJob
@@ -102,13 +128,13 @@ const DashboardJob = ({
   );
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ userData }) => ({ userData });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
-        type: SET_JOBS,
+        type: SET_USER_DATA,
         payload,
       });
     },

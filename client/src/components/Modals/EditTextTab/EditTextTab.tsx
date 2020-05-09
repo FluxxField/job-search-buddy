@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { SET_CURRENT_JOB, SET_JOBS } from "../../../redux/actions";
+import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import TextForm from "../AddTab/TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./EditTextTab.sass";
@@ -14,7 +14,8 @@ const EditTextTab = ({
   getNode,
   currentJob,
   setCurrentJob,
-  setJobs,
+  userData,
+  setUserData,
 }) => {
   const [title, setTitle] = useState({
     value: currentJob.tabs[id].title,
@@ -39,8 +40,9 @@ const EditTextTab = ({
 
     const newCurrentJob = { ...currentJob, tabs: newTabsArray };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
 
     switch (displayTabs.length) {
       case 1:
@@ -91,13 +93,16 @@ const EditTextTab = ({
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
-        type: SET_JOBS,
+        type: SET_USER_DATA,
         payload,
       });
     },

@@ -1,25 +1,57 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useContext } from "react";
 import { connect } from "react-redux";
-import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
+import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import Button from "../../../components/Button/Button";
 import ProgressTabs from "../../../components/ProgressTabs/ProgressTabs";
 import styles from "./Job.sass";
 import EditDesc from "../../../components/Modals/EditDesc/EditDesc";
+import { DatabaseContext } from "../../../";
+import { toFirestore } from "../../../core/utilities";
 
-const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
+const Job = ({
+  title,
+  desc,
+  tabs,
+  currentJob,
+  setCurrentJob,
+  userData,
+  setUserData,
+}) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
+  const database = useContext(DatabaseContext);
 
+  // Sets default values if there is not some already. Updates userData to reflect the changes
   useEffect(() => {
     const curJob = { ...currentJob };
-
     if (!curJob.desc) curJob.desc = "";
-    if (!curJob.tabs) curJob.tabs = [];
+    if (!curJob.tabs) {
+      curJob.tabs = [];
+    }
 
+    userData.jobs.set(curJob.id, curJob);
+    setUserData(userData);
     setCurrentJob(curJob);
-    setJobs(curJob);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...userData,
+              jobs: toFirestore(userData.jobs), // Cannot store a map
+            });
+        });
+      });
   }, []);
 
+  // Handles Modal EventListeners
   useEffect(() => {
     const _handleOutsideClick = function (event) {
       if (node !== event.target) return;
@@ -62,7 +94,7 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
             </div>
           </div>
 
-          <ProgressTabs tabs={tabs} />
+          <ProgressTabs tabs={tabs || []} />
         </div>
       </div>
 
@@ -79,19 +111,22 @@ const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
-      dispatch({
-        type: SET_JOBS,
-        payload,
-      });
-    },
     setCurrentJob: (payload: any) => {
       dispatch({
         type: SET_CURRENT_JOB,
+        payload,
+      });
+    },
+    setUserData: (payload: any) => {
+      dispatch({
+        type: SET_USER_DATA,
         payload,
       });
     },

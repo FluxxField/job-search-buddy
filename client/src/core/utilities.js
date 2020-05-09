@@ -45,3 +45,34 @@ export const descValidator = (desc) => {
 
   return "";
 };
+
+export const toFirestore = (jobsMap) => {
+  return [...jobsMap].reduce((acc, [key, job]) => {
+    let newJob = {
+      ...job,
+      tabs: {},
+    };
+
+    if (job.tabs) {
+      job.tabs.map((tab, i) => {
+        newJob.tabs[i] = tab;
+      });
+    }
+
+    return [...acc, newJob];
+  }, []);
+};
+
+export const fromFirestore = (jobsArray) => {
+  return new Map(
+    jobsArray.reduce((acc, cur) => {
+      let tabsArray = [];
+
+      Object.keys(cur.tabs).map((tabIndex) => {
+        tabsArray[tabIndex] = cur.tabs[tabIndex];
+      });
+
+      return [...acc, [cur.id, { ...cur, tabs: tabsArray }]];
+    }, [])
+  );
+};

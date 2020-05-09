@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { SET_CURRENT_JOB, SET_JOBS } from "../../../redux/actions";
+import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import Portal from "../../Portal/Portal";
 import styles from "./EditFileTab.sass";
 import FileForm from "../AddTab/FileForm/FileForm";
@@ -13,8 +13,9 @@ const EditFileTab = ({
   setIsHidden,
   getNode,
   currentJob,
-  setJobs,
   setCurrentJob,
+  userData,
+  setUserData,
 }) => {
   const [title, setTitle] = useState({
     value: currentJob.tabs[id].title,
@@ -43,8 +44,9 @@ const EditFileTab = ({
 
     const newCurrentJob = { ...currentJob, tabs: newTabsArray };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
 
     switch (displayTabs.length) {
       case 1:
@@ -95,13 +97,16 @@ const EditFileTab = ({
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
-        type: SET_JOBS,
+        type: SET_USER_DATA,
         payload,
       });
     },

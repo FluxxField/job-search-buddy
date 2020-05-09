@@ -1,9 +1,11 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { SET_USER_DATA } from "../../redux/actions";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
+import { DatabaseContext } from "../../";
 
 interface ISignupProps {
   userData: object;
@@ -12,12 +14,15 @@ interface ISignupProps {
 
 const AuthLoading = ({ userData, setUserDataDispatch }: ISignupProps) => {
   const history = useHistory();
+  const database = useContext(DatabaseContext);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setUserDataDispatch({
-          ...user,
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
           ...userData,
         });
         history.push("/dashboard");

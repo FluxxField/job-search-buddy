@@ -17,8 +17,11 @@
     "outDir": "./public/",
     "sourceMap": true,
     "module": "commonjs",
-    "jsx": "react"
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "noStrictGenericChecks": true,
+    "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "core"],
   "exclude": ["node_modules"]
 }
