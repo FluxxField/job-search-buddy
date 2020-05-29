@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback } from "react";
 import TextTab from "./TextTab/TextTab";
 import LastTab from "./LastTab/LastTab";
 import AddTab from "../Modals/AddTab/AddTab";
@@ -18,43 +18,58 @@ const ProgressTabs = ({ tabs }) => {
   const [tabID, setTabID] = useState(null);
   const [node, setNode] = useState(null);
 
-  const _handleOnClickAddTab = (event) => {
-    event.preventDefault();
-    setIsHiddenAddTab(!isHiddenAddTab);
-  };
+  const _handleOnClickAddTab = useCallback(
+    (event) => {
+      event.preventDefault();
+      setIsHiddenAddTab(!isHiddenAddTab);
+    },
+    [isHiddenAddTab]
+  );
 
-  const _handleOnClickTextTab = (event, id) => {
-    event.preventDefault();
-    setTabID(id);
-    setIsHiddenEditTextTab(!isHiddenEditTextTab);
-  };
+  const _handleOnClickTextTab = useCallback(
+    (event, id) => {
+      event.preventDefault();
+      setTabID(id);
+      setIsHiddenEditTextTab(!isHiddenEditTextTab);
+    },
+    [isHiddenEditTextTab]
+  );
 
-  const _handleOnClickFileTab = (event, id) => {
-    event.preventDefault();
-    setTabID(id);
-    setIsHiddenEditFileTab(!isHiddenEditFileTab);
-  };
+  const _handleOnClickFileTab = useCallback(
+    (event, id) => {
+      event.preventDefault();
+      setTabID(id);
+      setIsHiddenEditFileTab(!isHiddenEditFileTab);
+    },
+    [isHiddenEditFileTab]
+  );
 
-  const _handleOnClickLeftBtn = (event) => {
-    event.preventDefault();
-    const currentArray = displayTabs;
-    currentArray.pop();
+  const _handleOnClickLeftBtn = useCallback(
+    (event) => {
+      event.preventDefault();
+      const currentArray = displayTabs;
+      currentArray.pop();
 
-    setDisplayTabs([tabs[currentArray[0].id - 1], ...currentArray]);
-  };
+      setDisplayTabs([tabs[currentArray[0].id - 1], ...currentArray]);
+    },
+    [displayTabs, tabs]
+  );
 
-  const _handleOnClickRightBtn = (event) => {
-    event.preventDefault();
-    const currentArray = displayTabs;
-    currentArray.shift();
+  const _handleOnClickRightBtn = useCallback(
+    (event) => {
+      event.preventDefault();
+      const currentArray = displayTabs;
+      currentArray.shift();
 
-    setDisplayTabs([
-      ...currentArray,
-      tabs[currentArray[currentArray.length - 1].id + 1] || {
-        type: "lastTab",
-      },
-    ]);
-  };
+      setDisplayTabs([
+        ...currentArray,
+        tabs[currentArray[currentArray.length - 1].id + 1] || {
+          type: "lastTab",
+        },
+      ]);
+    },
+    [displayTabs, tabs]
+  );
 
   // Set the display tabs based upon the size of the current jobs tab size
   useEffect(() => {

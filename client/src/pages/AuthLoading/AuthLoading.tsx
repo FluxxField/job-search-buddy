@@ -22,8 +22,6 @@ const AuthLoading = ({
   const history = useHistory();
   const database = useContext(DatabaseContext);
 
-  console.log("AuthLoading");
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

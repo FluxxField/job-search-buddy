@@ -11,17 +11,16 @@ const Overview = ({ userData }) => (
       </div>
 
       <div className={styles.body}>
-        {userData.jobs &&
-          [...userData.jobs].map(([key, job]) => (
-            <DashboardJob
-              key={key}
-              lastBox={false}
-              job={job}
-              id={job.id}
-              title={job.title}
-              tabs={job.tabs}
-            />
-          ))}
+        {[...userData?.jobs].map(([key, job]) => (
+          <DashboardJob
+            key={key}
+            lastBox={false}
+            job={job}
+            id={job.id}
+            title={job.title}
+            tabs={job.tabs}
+          />
+        ))}
         <DashboardJob lastBox={true} />
       </div>
     </div>

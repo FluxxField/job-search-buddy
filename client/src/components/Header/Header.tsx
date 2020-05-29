@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import { signoutUser } from "../../core/auth-api";
 import { useHistory } from "react-router-dom";
@@ -17,16 +17,19 @@ const Header = ({ setUserData, setCurrentJob }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
 
-  const _handleOnClick = (event: IEvent) => {
-    event.preventDefault();
+  const _handleOnClick = useCallback(
+    (event: IEvent) => {
+      event.preventDefault();
 
-    setUserData({});
-    setCurrentJob({});
+      setUserData({});
+      setCurrentJob({});
 
-    signoutUser();
+      signoutUser();
 
-    history.push("/");
-  };
+      history.push("/");
+    },
+    [history]
+  );
 
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {

@@ -20,8 +20,6 @@ const Dashboard = ({ userData, setUserData, setCurrentJob }: ISignupProps) => {
   const history = useHistory();
   const match = useRouteMatch();
 
-  console.log("Dashboard");
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

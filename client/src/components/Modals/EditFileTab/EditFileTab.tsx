@@ -1,4 +1,11 @@
-import React, { memo, useState, useEffect, useRef, useContext } from "react";
+import React, {
+  memo,
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from "react";
 import { connect } from "react-redux";
 import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import Portal from "../../Portal/Portal";
@@ -24,56 +31,59 @@ const EditFileTab = ({
   const [file, setFile] = useState(null);
   const node = useRef(null);
 
-  const _handleOnClick = (event) => {
-    event.preventDefault();
+  const _handleOnClick = useCallback(
+    (event) => {
+      event.preventDefault();
 
-    const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
-      if (cur.id === id) {
-        return [
-          ...acc,
-          {
-            id,
-            title: title.value,
-            file: file || currentJob.tabs[id].file,
-            type: "fileTab",
-          },
-        ];
-      }
-      return [...acc, cur];
-    }, []);
-
-    const newCurrentJob = { ...currentJob, tabs: newTabsArray };
-
-    userData.jobs.set(newCurrentJob.id, newCurrentJob);
-    setUserData(userData);
-    setCurrentJob(newCurrentJob);
-
-    switch (displayTabs.length) {
-      case 1:
-      case 2:
-        setDisplayTabs([...newCurrentJob.tabs, { type: "lastTab" }]);
-        break;
-      default:
-        if (displayTabs[2].type === "lastTab") {
-          setDisplayTabs([
-            ...newCurrentJob.tabs.slice(
-              displayTabs[0].id,
-              displayTabs[1].id + 1
-            ),
-            { type: "lastTab" },
-          ]);
-        } else {
-          setDisplayTabs([
-            ...newCurrentJob.tabs.slice(
-              displayTabs[0].id,
-              displayTabs[2].id + 1
-            ),
-          ]);
+      const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
+        if (cur.id === id) {
+          return [
+            ...acc,
+            {
+              id,
+              title: title.value,
+              file: file || currentJob.tabs[id].file,
+              type: "fileTab",
+            },
+          ];
         }
-    }
+        return [...acc, cur];
+      }, []);
 
-    setIsHidden(!isHidden);
-  };
+      const newCurrentJob = { ...currentJob, tabs: newTabsArray };
+
+      userData.jobs.set(newCurrentJob.id, newCurrentJob);
+      setUserData(userData);
+      setCurrentJob(newCurrentJob);
+
+      switch (displayTabs.length) {
+        case 1:
+        case 2:
+          setDisplayTabs([...newCurrentJob.tabs, { type: "lastTab" }]);
+          break;
+        default:
+          if (displayTabs[2].type === "lastTab") {
+            setDisplayTabs([
+              ...newCurrentJob.tabs.slice(
+                displayTabs[0].id,
+                displayTabs[1].id + 1
+              ),
+              { type: "lastTab" },
+            ]);
+          } else {
+            setDisplayTabs([
+              ...newCurrentJob.tabs.slice(
+                displayTabs[0].id,
+                displayTabs[2].id + 1
+              ),
+            ]);
+          }
+      }
+
+      setIsHidden(!isHidden);
+    },
+    [currentJob, title, file, userData, displayTabs, isHidden]
+  );
 
   useEffect(() => {
     getNode(node.current);

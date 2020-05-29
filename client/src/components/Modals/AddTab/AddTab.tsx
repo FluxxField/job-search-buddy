@@ -1,4 +1,11 @@
-import React, { memo, useEffect, useState, useRef, useContext } from "react";
+import React, {
+  memo,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  useCallback,
+} from "react";
 import { connect } from "react-redux";
 import { titleValidator, descValidator } from "../../../core/utilities";
 import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
@@ -30,122 +37,130 @@ const AddTab = ({
   const storage = useContext(StorageContext);
   const node = useRef();
 
-  const _handleOnSubmitDefaultForm = (event) => {
+  const _handleOnSubmitDefaultForm = useCallback((event) => {
     event.preventDefault();
     if (event.target.value === "Yes") setSwitchCase("FileForm");
     if (event.target.value === "No") setSwitchCase("TextForm");
-  };
+  }, []);
 
-  const _handleOnSubmitTextForm = (event) => {
-    event.preventDefault();
+  const _handleOnSubmitTextForm = useCallback(
+    (event) => {
+      event.preventDefault();
 
-    const titleError = titleValidator(title.value);
-    const descError = descValidator(desc.value);
+      const titleError = titleValidator(title.value);
+      const descError = descValidator(desc.value);
 
-    if (titleError || descError) {
-      setTitle({ ...title, error: titleError });
-      setDesc({ ...desc, error: descError });
-      return;
-    }
+      if (titleError || descError) {
+        setTitle({ ...title, error: titleError });
+        setDesc({ ...desc, error: descError });
+        return;
+      }
 
-    const newCurrentJob = {
-      ...currentJob,
-      tabs: [
-        ...currentJob.tabs,
-        {
-          id: currentJob.tabs.length,
-          title: title.value,
-          desc: desc.value,
-          type: "textTab",
-        },
-      ],
-    };
+      const newCurrentJob = {
+        ...currentJob,
+        tabs: [
+          ...currentJob.tabs,
+          {
+            id: currentJob.tabs.length,
+            title: title.value,
+            desc: desc.value,
+            type: "textTab",
+          },
+        ],
+      };
 
-    userData.jobs.set(newCurrentJob.id, newCurrentJob);
-    setUserData(userData);
-    setCurrentJob(newCurrentJob);
-    setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
+      userData.jobs.set(newCurrentJob.id, newCurrentJob);
+      setUserData(userData);
+      setCurrentJob(newCurrentJob);
+      setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
 
-    setIsHidden(!isHidden);
+      setIsHidden(!isHidden);
 
-    database
-      .collection("users")
-      .where("uid", "==", userData.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
+      database
+        .collection("users")
+        .where("uid", "==", userData.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            database
+              .collection("users")
+              .doc(doc.id)
+              .update({
+                ...doc.data(),
+                ...userData,
+                jobs: toFirestore(userData.jobs), // Cannot store a map
+              });
+          });
+        });
+    },
+    [currentJob, title, desc, userData, isHidden]
+  );
+
+  const _handleOnSubmitFileForm = useCallback(
+    (event) => {
+      event.preventDefault();
+      const titleError = titleValidator(title.value);
+
+      if (titleError) {
+        setTitle({ ...title, error: titleError });
+        return;
+      }
+
+      let storageRef = storage.ref();
+      let filesRef = storageRef.child("users");
+      let userRef = filesRef.child(`${userData.uid}`);
+      let fileRef = userRef.child(title.value);
+      fileRef.put(file);
+
+      fileRef
+        .getDownloadURL()
+        .then((url) => {
+          setFile(url);
+          return url;
+        })
+        .then((url) => {
+          const newCurrentJob = {
+            ...currentJob,
+            tabs: [
+              ...currentJob.tabs,
+              {
+                id: currentJob.tabs.length,
+                title: title.value,
+                type: "fileTab",
+                file: url,
+              },
+            ],
+          };
+
+          userData.jobs.set(newCurrentJob.id, newCurrentJob);
+          setUserData(userData);
+          setCurrentJob(newCurrentJob);
+          setDisplayTabs([
+            ...newCurrentJob.tabs.slice(-2),
+            { type: "lastTab" },
+          ]);
+
           database
             .collection("users")
-            .doc(doc.id)
-            .update({
-              ...doc.data(),
-              ...userData,
-              jobs: toFirestore(userData.jobs), // Cannot store a map
+            .where("uid", "==", userData.uid)
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                database
+                  .collection("users")
+                  .doc(doc.id)
+                  .update({
+                    ...doc.data(),
+                    ...userData,
+                    jobs: toFirestore(userData.jobs), // Cannot store a map
+                  });
+              });
             });
         });
-      });
-  };
-
-  const _handleOnSubmitFileForm = (event) => {
-    event.preventDefault();
-
-    const titleError = titleValidator(title.value);
-
-    if (titleError) {
-      setTitle({ ...title, error: titleError });
-      return;
-    }
-
-    let storageRef = storage.ref();
-    let filesRef = storageRef.child("users");
-    let userRef = filesRef.child(`${userData.uid}`);
-    let fileRef = userRef.child(title.value);
-    fileRef.put(file);
-
-    fileRef
-      .getDownloadURL()
-      .then((url) => {
-        setFile(url);
-        return url;
-      })
-      .then((url) => {
-        const newCurrentJob = {
-          ...currentJob,
-          tabs: [
-            ...currentJob.tabs,
-            {
-              id: currentJob.tabs.length,
-              title: title.value,
-              type: "fileTab",
-              file: url,
-            },
-          ],
-        };
-
-        userData.jobs.set(newCurrentJob.id, newCurrentJob);
-        setUserData(userData);
-        setCurrentJob(newCurrentJob);
-        setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
-
-        database
-          .collection("users")
-          .where("uid", "==", userData.uid)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              database
-                .collection("users")
-                .doc(doc.id)
-                .update({
-                  ...doc.data(),
-                  ...userData,
-                  jobs: toFirestore(userData.jobs), // Cannot store a map
-                });
-            });
-          });
-      });
-    setIsHidden(!isHidden);
-  };
+      setIsHidden(!isHidden);
+    },
+    [title, userData, currentJob]
+  );
 
   useEffect(() => {
     getNode(node.current);

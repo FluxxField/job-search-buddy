@@ -1,4 +1,11 @@
-import React, { memo, useRef, useEffect, useState, useContext } from "react";
+import React, {
+  memo,
+  useRef,
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+} from "react";
 import { connect } from "react-redux";
 import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
 import Portal from "../../Portal/Portal";
@@ -25,38 +32,41 @@ const EditDesc = ({
   const database = useContext(DatabaseContext);
   const node = useRef();
 
-  const _handleOnClick = (event) => {
-    event.preventDefault();
+  const _handleOnClick = useCallback(
+    (event) => {
+      event.preventDefault();
 
-    const newCurrentJob = {
-      ...currentJob,
-      title: newTitle.value,
-      desc: newDesc.value,
-    };
+      const newCurrentJob = {
+        ...currentJob,
+        title: newTitle.value,
+        desc: newDesc.value,
+      };
 
-    userData.jobs.set(newCurrentJob.id, newCurrentJob);
-    setUserData(userData);
-    setCurrentJob(newCurrentJob);
+      userData.jobs.set(newCurrentJob.id, newCurrentJob);
+      setUserData(userData);
+      setCurrentJob(newCurrentJob);
 
-    setIsHidden(!isHidden);
+      setIsHidden(!isHidden);
 
-    database
-      .collection("users")
-      .where("uid", "==", userData.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          database
-            .collection("users")
-            .doc(doc.id)
-            .update({
-              ...doc.data(),
-              ...userData,
-              jobs: toFirestore(userData.jobs), // Cannot store a map
-            });
+      database
+        .collection("users")
+        .where("uid", "==", userData.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            database
+              .collection("users")
+              .doc(doc.id)
+              .update({
+                ...doc.data(),
+                ...userData,
+                jobs: toFirestore(userData.jobs), // Cannot store a map
+              });
+          });
         });
-      });
-  };
+    },
+    [currentJob, newTitle, newDesc, userData, isHidden]
+  );
 
   useEffect(() => {
     getNode(node.current);

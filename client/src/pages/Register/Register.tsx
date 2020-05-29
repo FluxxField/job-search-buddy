@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Login from "./Login/Login";
@@ -20,10 +20,13 @@ const Register = () => {
 
   console.log("Register");
 
-  const _handleOnClick = (event: IEvent) => {
-    event.preventDefault();
-    history.push(`${match.path}/${event.target.textContent.toLowerCase()}`);
-  };
+  const _handleOnClick = useCallback(
+    (event: IEvent) => {
+      event.preventDefault();
+      history.push(`${match.path}/${event.target.textContent.toLowerCase()}`);
+    },
+    [history]
+  );
 
   return (
     <>

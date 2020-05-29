@@ -1,4 +1,10 @@
-import React, { memo, useState, useEffect, useContext } from "react";
+import React, {
+  memo,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import { connect } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { titleValidator, toFirestore } from "../../core/utilities";
@@ -39,46 +45,49 @@ const DashboardJob = ({
   const match = useRouteMatch();
   const database = useContext(DatabaseContext);
 
-  const _handleOnClick = (event) => {
-    event.preventDefault();
+  const _handleOnClick = useCallback(
+    (event) => {
+      event.preventDefault();
 
-    const titleError = titleValidator(newJobTitle.value);
-    const jobID = md5(newJobTitle.value);
-    const currentJobObject = { id: jobID, title: newJobTitle.value };
-    const currentUserData = {
-      ...userData,
-      jobs: new Map([...userData.jobs, [jobID, currentJobObject]]),
-    };
+      const titleError = titleValidator(newJobTitle.value);
+      const jobID = md5(newJobTitle.value);
+      const currentJobObject = { id: jobID, title: newJobTitle.value };
+      const currentUserData = {
+        ...userData,
+        jobs: new Map([...userData.jobs, [jobID, currentJobObject]]),
+      };
 
-    if (titleError) {
-      setNewJobTitle({ ...newJobTitle, error: titleError });
-      return;
-    }
+      if (titleError) {
+        setNewJobTitle({ ...newJobTitle, error: titleError });
+        return;
+      }
 
-    setCurrentJob(currentJobObject);
-    setUserData(currentUserData);
+      setCurrentJob(currentJobObject);
+      setUserData(currentUserData);
 
-    database
-      .collection("users")
-      .where("uid", "==", userData.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          database
-            .collection("users")
-            .doc(doc.id)
-            .update({
-              ...doc.data(),
-              ...currentUserData,
-              jobs: toFirestore(currentUserData.jobs), // Cannot store a map
-            });
+      database
+        .collection("users")
+        .where("uid", "==", userData.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            database
+              .collection("users")
+              .doc(doc.id)
+              .update({
+                ...doc.data(),
+                ...currentUserData,
+                jobs: toFirestore(currentUserData.jobs), // Cannot store a map
+              });
+          });
         });
-      });
 
-    history.push(`${match.path}/${jobID}`);
-  };
+      history.push(`${match.path}/${jobID}`);
+    },
+    [userData, newJobTitle, history]
+  );
 
-  const _handleButtonClick = () => {
+  const _handleButtonClick = useCallback(() => {
     if (lastBox) {
       setIsHidden(!isHidden);
       return;
@@ -87,7 +96,7 @@ const DashboardJob = ({
     setCurrentJob(job);
 
     history.push(`${match.path}/${id}`);
-  };
+  }, [lastBox, isHidden, job, history]);
 
   useEffect(() => {
     const _handleOutsideClick = function (event) {
