@@ -109,57 +109,60 @@ const AddTab = ({
       let storageRef = storage.ref();
       let filesRef = storageRef.child("users");
       let userRef = filesRef.child(`${userData.uid}`);
-      let fileRef = userRef.child(title.value);
-      fileRef.put(file);
+      let jobRef = userRef.child(currentJob.id);
+      let fileRef = jobRef.child(title.value);
 
-      fileRef
-        .getDownloadURL()
-        .then((url) => {
-          setFile(url);
-          return url;
-        })
-        .then((url) => {
-          const newCurrentJob = {
-            ...currentJob,
-            tabs: [
-              ...currentJob.tabs,
-              {
-                id: currentJob.tabs.length,
-                title: title.value,
-                type: "fileTab",
-                file: url,
-              },
-            ],
-          };
+      fileRef.put(file).then(() => {
+        fileRef
+          .getDownloadURL()
+          .then((url) => {
+            setFile(url);
+            return url;
+          })
+          .then((url) => {
+            console.log(url);
+            const newCurrentJob = {
+              ...currentJob,
+              tabs: [
+                ...currentJob.tabs,
+                {
+                  id: currentJob.tabs.length,
+                  title: title.value,
+                  type: "fileTab",
+                  file: url,
+                },
+              ],
+            };
 
-          userData.jobs.set(newCurrentJob.id, newCurrentJob);
-          setUserData(userData);
-          setCurrentJob(newCurrentJob);
-          setDisplayTabs([
-            ...newCurrentJob.tabs.slice(-2),
-            { type: "lastTab" },
-          ]);
+            userData.jobs.set(newCurrentJob.id, newCurrentJob);
+            setUserData(userData);
+            setCurrentJob(newCurrentJob);
+            setDisplayTabs([
+              ...newCurrentJob.tabs.slice(-2),
+              { type: "lastTab" },
+            ]);
 
-          database
-            .collection("users")
-            .where("uid", "==", userData.uid)
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                database
-                  .collection("users")
-                  .doc(doc.id)
-                  .update({
-                    ...doc.data(),
-                    ...userData,
-                    jobs: toFirestore(userData.jobs), // Cannot store a map
-                  });
+            database
+              .collection("users")
+              .where("uid", "==", userData.uid)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  database
+                    .collection("users")
+                    .doc(doc.id)
+                    .update({
+                      ...doc.data(),
+                      ...userData,
+                      jobs: toFirestore(userData.jobs), // Cannot store a map
+                    });
+                });
               });
-            });
-        });
+          });
+      });
       setIsHidden(!isHidden);
     },
-    [title, userData, currentJob]
+    [title, file, userData, currentJob, isHidden]
   );
 
   useEffect(() => {
