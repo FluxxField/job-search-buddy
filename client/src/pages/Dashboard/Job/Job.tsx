@@ -6,9 +6,10 @@ import ProgressTabs from "../../../components/ProgressTabs/ProgressTabs";
 import styles from "./Job.sass";
 import EditDesc from "../../../components/Modals/EditDesc/EditDesc";
 
-const Job = ({ title, desc, tabs, currentJob, setJobs, setCurrentJob }) => {
+const Job = ({ currentJob, setJobs, setCurrentJob }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [node, setNode] = useState(null);
+  const { title, desc, tabs } = currentJob;
 
   useEffect(() => {
     const curJob = { ...currentJob };

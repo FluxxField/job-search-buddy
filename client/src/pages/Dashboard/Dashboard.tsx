@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from "react";
 import { useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-import { SET_USER_DATA, SET_CURRENT_JOB, SET_JOBS } from "../../redux/actions";
+import { SET_USER_DATA } from "../../redux/actions";
 import firebase from "firebase/app";
 import "firebase/auth";
 import Overview from "./Overview/Overview";
@@ -10,10 +10,9 @@ import Job from "./Job/Job";
 interface ISignupProps {
   userData: object;
   setUserData: any;
-  currentJob: any;
 }
 
-const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
+const Dashboard = ({ userData, setUserData }: ISignupProps) => {
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -34,11 +33,7 @@ const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
     <>
       <Switch>
         <Route path={`${match.path}/:jobID`}>
-          <Job
-            title={currentJob.title}
-            desc={currentJob.desc}
-            tabs={currentJob.tabs}
-          />
+          <Job />
         </Route>
 
         <Route path={match.path}>
@@ -49,9 +44,8 @@ const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
   );
 };
 
-const mapStateToProps = ({ userData, currentJob }) => ({
+const mapStateToProps = ({ userData }) => ({
   userData,
-  currentJob,
 });
 
 const mapDispatchToProps = (dispatch: any) => {

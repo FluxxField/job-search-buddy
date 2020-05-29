@@ -7,16 +7,16 @@ import "firebase/auth";
 
 interface ISignupProps {
   userData: object;
-  setUserDataDispatch: any;
+  setUserData: any;
 }
 
-const AuthLoading = ({ userData, setUserDataDispatch }: ISignupProps) => {
+const AuthLoading = ({ userData, setUserData }: ISignupProps) => {
   const history = useHistory();
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        setUserDataDispatch({
+        setUserData({
           ...user,
           ...userData,
         });
@@ -38,7 +38,7 @@ const mapStateToProps = ({ userData }: any) => ({ userData });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setUserDataDispatch: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
         type: SET_USER_DATA,
         payload,

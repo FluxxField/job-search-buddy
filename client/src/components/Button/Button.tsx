@@ -1,4 +1,4 @@
-import React, { memo } from "React";
+import React, { memo } from "react";
 import styles from "./Button.sass";
 
 interface IButton {
