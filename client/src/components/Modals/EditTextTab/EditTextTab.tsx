@@ -27,11 +27,11 @@ const EditTextTab = ({
   setUserData,
 }) => {
   const [title, setTitle] = useState({
-    value: currentJob.tabs[id].title,
+    value: currentJob.tabs.find((tab) => tab.id === id).title,
     error: "",
   });
   const [desc, setDesc] = useState({
-    value: currentJob.tabs[id].desc,
+    value: currentJob.tabs.find((tab) => tab.id === id).desc,
     error: "",
   });
   const database = useContext(DatabaseContext);
@@ -39,15 +39,14 @@ const EditTextTab = ({
 
   const _handleOnSubmitTextForm = useCallback(
     (event) => {
-      const newTabsArray = currentJob.tabs.reduce((acc, cur) => {
-        if (cur.id === id) {
-          return [
-            ...acc,
-            { id, title: title.value, desc: desc.value, type: "textTab" },
-          ];
+      event.preventDefault();
+
+      const newTabsArray = currentJob.tabs.map((tab) => {
+        if (tab.id === id) {
+          return { id, title: title.value, desc: desc.value, type: "textTab" };
         }
-        return [...acc, cur];
-      }, []);
+        return tab;
+      });
 
       const newCurrentJob = { ...currentJob, tabs: newTabsArray };
 
@@ -97,7 +96,68 @@ const EditTextTab = ({
           });
         });
     },
-    [currentJob, title, desc, userData, displayTabs, isHidden]
+    [currentJob, id, title, desc, userData, displayTabs, isHidden]
+  );
+
+  const _handleOnRemove = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      let newTabsArray = currentJob.tabs.filter((tab) => {
+        if (tab.id !== id) {
+          return tab;
+        }
+      });
+
+      const newCurrentJob = { ...currentJob, tabs: newTabsArray };
+
+      userData.jobs.set(newCurrentJob.id, newCurrentJob);
+      setUserData(userData);
+      setCurrentJob(newCurrentJob);
+
+      switch (displayTabs.length) {
+        case 1:
+        case 2:
+          setDisplayTabs([...newCurrentJob.tabs, { type: "lastTab" }]);
+          break;
+        default:
+          if (displayTabs[2].type === "lastTab") {
+            setDisplayTabs([
+              ...newCurrentJob.tabs.slice(
+                displayTabs[0].id,
+                displayTabs[1].id + 1
+              ),
+            ]);
+          } else {
+            setDisplayTabs([
+              ...newCurrentJob.tabs.slice(
+                displayTabs[0].id,
+                displayTabs[2].id + 1
+              ),
+            ]);
+          }
+      }
+
+      setIsHidden(!isHidden);
+
+      database
+        .collection("users")
+        .where("uid", "==", userData.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            database
+              .collection("users")
+              .doc(doc.id)
+              .update({
+                ...doc.data(),
+                ...userData,
+                jobs: toFirestore(userData.jobs), // Cannot store a map
+              });
+          });
+        });
+    },
+    [currentJob, id, userData, displayTabs, isHidden]
   );
 
   useEffect(() => {
@@ -115,6 +175,7 @@ const EditTextTab = ({
               desc={desc}
               setDesc={setDesc}
               onClick={_handleOnSubmitTextForm}
+              onRemove={_handleOnRemove}
             />
           </div>
         </div>

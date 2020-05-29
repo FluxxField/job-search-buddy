@@ -3,8 +3,9 @@ import Text from "../../../Inputs/Text/Text";
 import TextArea from "../../../TextArea/TextArea";
 import Submit from "../../../Inputs/Submit/Submit";
 import styles from "./TextForm.sass";
+import Button from "../../../Button/Button";
 
-const TextForm = ({ title, setTitle, desc, setDesc, onClick }) => {
+const TextForm = ({ title, setTitle, desc, setDesc, onClick, onRemove }) => {
   return (
     <>
       <form className={styles.form}>
@@ -38,6 +39,8 @@ const TextForm = ({ title, setTitle, desc, setDesc, onClick }) => {
           error={!title.error || !desc.error ? true : false}
           errorText={title.error || desc.error}
         />
+
+        <Button onClick={onRemove}>Remove</Button>
       </form>
     </>
   );

@@ -7,6 +7,7 @@ import React, {
   useCallback,
 } from "react";
 import { connect } from "react-redux";
+import md5 from "md5";
 import { titleValidator, descValidator } from "../../../core/utilities";
 import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
 import DefaultForm from "./DefaultForm/DefaultForm";
@@ -61,7 +62,7 @@ const AddTab = ({
         tabs: [
           ...currentJob.tabs,
           {
-            id: currentJob.tabs.length,
+            id: md5(title.value),
             title: title.value,
             desc: desc.value,
             type: "textTab",
@@ -106,11 +107,12 @@ const AddTab = ({
         return;
       }
 
-      let storageRef = storage.ref();
-      let filesRef = storageRef.child("users");
-      let userRef = filesRef.child(`${userData.uid}`);
-      let jobRef = userRef.child(currentJob.id);
-      let fileRef = jobRef.child(title.value);
+      const fileRef = storage
+        .ref()
+        .child("users")
+        .child(`${userData.uid}`)
+        .child(currentJob.id)
+        .child(title.value);
 
       fileRef.put(file).then(() => {
         fileRef
@@ -192,6 +194,7 @@ const AddTab = ({
                       desc={desc}
                       setDesc={setDesc}
                       onClick={_handleOnSubmitTextForm}
+                      onRemove={() => {}}
                     />
                   );
                 default:

@@ -50,7 +50,7 @@ const ProgressTabs = ({ tabs }) => {
       const currentArray = displayTabs;
       currentArray.pop();
 
-      setDisplayTabs([tabs[currentArray[0].id - 1], ...currentArray]);
+      setDisplayTabs([tabs[currentArray[0].id - 1], ...currentArray]); //FIX id is no longer a number
     },
     [displayTabs, tabs]
   );
@@ -64,6 +64,7 @@ const ProgressTabs = ({ tabs }) => {
       setDisplayTabs([
         ...currentArray,
         tabs[currentArray[currentArray.length - 1].id + 1] || {
+          //FIX id is no longer a number
           type: "lastTab",
         },
       ]);
@@ -146,6 +147,7 @@ const ProgressTabs = ({ tabs }) => {
         </div>
 
         <div className={styles.tab_body}>
+          {console.log(displayTabs)}
           {displayTabs.map((tab, i) => {
             switch (tab.type) {
               case "textTab":
