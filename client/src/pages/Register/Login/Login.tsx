@@ -20,10 +20,10 @@ interface IConnectStore {
 
 interface ILoginProps {
   userData: object;
-  setUserDataDispatch: any;
+  setUserData: any;
 }
 
-const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
+const Login = ({ userData, setUserData }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
@@ -64,7 +64,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
       return;
     }
 
-    setUserDataDispatch({
+    setUserData({
       ...userData,
       uid: response.user.uid,
       displayName: response.user.displayName,
@@ -121,7 +121,7 @@ const mapStateToProps = ({ userData }: IConnectStore) => ({ userData });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setUserDataDispatch: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
         type: SET_USER_DATA,
         payload,

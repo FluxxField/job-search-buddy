@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef, useContext } from "react";
 import { connect } from "react-redux";
 import { titleValidator, descValidator } from "../../../core/utilities";
 import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
@@ -7,7 +7,10 @@ import FileForm from "./FileForm/FileForm";
 import TextForm from "./TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./AddTab.sass";
-import userData from "../../../redux/reducers/userData";
+import "firebase/firestore";
+import "firebase/storage";
+import { DatabaseContext, StorageContext } from "../../../";
+import { toFirestore } from "../../../core/utilities";
 
 const AddTab = ({
   isHidden,
@@ -23,6 +26,8 @@ const AddTab = ({
   const [title, setTitle] = useState({ value: "", error: "" });
   const [desc, setDesc] = useState({ value: "", error: "" });
   const [file, setFile] = useState(null);
+  const database = useContext(DatabaseContext);
+  const storage = useContext(StorageContext);
   const node = useRef();
 
   const _handleOnSubmitDefaultForm = (event) => {
@@ -62,6 +67,23 @@ const AddTab = ({
     setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
 
     setIsHidden(!isHidden);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...userData,
+              jobs: toFirestore(userData.jobs), // Cannot store a map
+            });
+        });
+      });
   };
 
   const _handleOnSubmitFileForm = (event) => {
@@ -74,24 +96,54 @@ const AddTab = ({
       return;
     }
 
-    const newCurrentJob = {
-      ...currentJob,
-      tabs: [
-        ...currentJob.tabs,
-        {
-          id: currentJob.tabs.length,
-          title: title.value,
-          type: "fileTab",
-          file,
-        },
-      ],
-    };
+    let storageRef = storage.ref();
+    let filesRef = storageRef.child("users");
+    let userRef = filesRef.child(`${userData.uid}`);
+    let fileRef = userRef.child(title.value);
+    fileRef.put(file);
 
-    userData.jobs.set(newCurrentJob.id, newCurrentJob);
-    setUserData(userData);
-    setCurrentJob(newCurrentJob);
-    setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
+    fileRef
+      .getDownloadURL()
+      .then((url) => {
+        setFile(url);
+        return url;
+      })
+      .then((url) => {
+        const newCurrentJob = {
+          ...currentJob,
+          tabs: [
+            ...currentJob.tabs,
+            {
+              id: currentJob.tabs.length,
+              title: title.value,
+              type: "fileTab",
+              file: url,
+            },
+          ],
+        };
 
+        userData.jobs.set(newCurrentJob.id, newCurrentJob);
+        setUserData(userData);
+        setCurrentJob(newCurrentJob);
+        setDisplayTabs([...newCurrentJob.tabs.slice(-2), { type: "lastTab" }]);
+
+        database
+          .collection("users")
+          .where("uid", "==", userData.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              database
+                .collection("users")
+                .doc(doc.id)
+                .update({
+                  ...doc.data(),
+                  ...userData,
+                  jobs: toFirestore(userData.jobs), // Cannot store a map
+                });
+            });
+          });
+      });
     setIsHidden(!isHidden);
   };
 

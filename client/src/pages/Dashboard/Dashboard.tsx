@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useContext } from "react";
 import { useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-import { SET_USER_DATA } from "../../redux/actions";
+import { SET_USER_DATA, SET_CURRENT_JOB } from "../../redux/actions";
 import firebase from "firebase/app";
 import "firebase/auth";
 import Overview from "./Overview/Overview";
@@ -13,12 +13,20 @@ interface ISignupProps {
   userData: object;
   setUserData: any;
   currentJob: any;
+  setCurrentJob: any;
 }
 
-const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
+const Dashboard = ({
+  userData,
+  currentJob,
+  setUserData,
+  setCurrentJob,
+}: ISignupProps) => {
   const database = useContext(DatabaseContext);
   const history = useHistory();
   const match = useRouteMatch();
+
+  console.log("Dashboard");
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -34,34 +42,30 @@ const Dashboard = ({ userData, currentJob, setUserData }: ISignupProps) => {
 
         database
           .collection("users")
+          .where("uid", "==", userObject.uid)
           .get()
           .then((querySnapshot) => {
-            let isInDatabase = false;
+            if (querySnapshot.size === 0) {
+              database.collection("users").add({
+                ...userObject,
+                jobs: toFirestore(userObject.jobs),
+              });
+            } else {
+              querySnapshot.forEach((doc) => {
+                const databaseUser = doc.data();
 
-            querySnapshot.forEach((doc) => {
-              const databaseUser = doc.data();
-
-              if (databaseUser.uid === userObject.uid) {
                 userObject = {
                   ...userObject,
                   ...databaseUser,
-                  jobs: fromFirestore(databaseUser.jobs), // Convert the array to a map
+                  jobs: fromFirestore(databaseUser.jobs),
                 };
-                isInDatabase = true;
-              }
-            });
-
-            // If the user was not in the database, add them
-            if (!isInDatabase) {
-              database.collection("users").add({
-                ...userObject,
-                jobs: toFirestore(userObject.jobs), // Cannot store a map
               });
             }
-
             setUserData(userObject);
           });
       } else {
+        setUserData({});
+        setCurrentJob({});
         history.push("/register");
       }
     });
@@ -96,6 +100,12 @@ const mapDispatchToProps = (dispatch: any) => {
     setUserData: (payload: any) => {
       dispatch({
         type: SET_USER_DATA,
+        payload,
+      });
+    },
+    setCurrentJob: (payload: any) => {
+      dispatch({
+        type: SET_CURRENT_JOB,
         payload,
       });
     },

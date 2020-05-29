@@ -1,9 +1,11 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef, useContext } from "react";
 import { connect } from "react-redux";
 import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import TextForm from "../AddTab/TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./EditTextTab.sass";
+import { DatabaseContext } from "../../..";
+import { toFirestore } from "../../../core/utilities";
 
 const EditTextTab = ({
   id,
@@ -25,6 +27,7 @@ const EditTextTab = ({
     value: currentJob.tabs[id].desc,
     error: "",
   });
+  const database = useContext(DatabaseContext);
   const node = useRef();
 
   const _handleOnSubmitTextForm = (event) => {
@@ -68,6 +71,23 @@ const EditTextTab = ({
     }
 
     setIsHidden(!isHidden);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...userData,
+              jobs: toFirestore(userData.jobs), // Cannot store a map
+            });
+        });
+      });
   };
 
   useEffect(() => {

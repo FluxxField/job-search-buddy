@@ -1,3 +1,5 @@
+import "firebase/storage";
+
 export const emailValidator = (email) => {
   const regEx = /\S+@\S+\.\S+/;
 

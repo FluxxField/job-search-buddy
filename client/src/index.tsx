@@ -14,16 +14,20 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 firebase.initializeApp(firebaseConfig);
 
 const database = firebase.firestore();
+const storage = firebase.storage();
 
 export const DatabaseContext = createContext(database);
+export const StorageContext = createContext(storage);
 
 const store = createStore(rootReducer);
 
 ReactDOM.render(
-  <DatabaseContext.Provider value={database}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </DatabaseContext.Provider>,
+  <StorageContext.Provider value={storage}>
+    <DatabaseContext.Provider value={database}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </DatabaseContext.Provider>
+  </StorageContext.Provider>,
   document.getElementById("root")
 );
