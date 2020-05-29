@@ -120,7 +120,6 @@ const AddTab = ({
             return url;
           })
           .then((url) => {
-            console.log(url);
             const newCurrentJob = {
               ...currentJob,
               tabs: [
