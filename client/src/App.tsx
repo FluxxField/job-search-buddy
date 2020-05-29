@@ -1,8 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/auth";
-import firebaseConfig from "./core/firebase.config";
 import styles from "./App.sass";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -10,11 +7,6 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import About from "./pages/About/About";
 import Register from "./pages/Register/Register";
 import AuthLoading from "./pages/AuthLoading/AuthLoading";
-import { pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
-firebase.initializeApp(firebaseConfig);
 
 const App = () => (
   <>

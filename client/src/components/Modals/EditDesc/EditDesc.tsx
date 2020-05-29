@@ -1,12 +1,13 @@
-import React, { memo, useRef, useEffect, useState } from "react";
+import React, { memo, useRef, useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
-import { descValidator, titleValidator } from "../../../core/utilities";
-import { SET_JOBS, SET_CURRENT_JOB } from "../../../redux/actions";
+import { SET_USER_DATA, SET_CURRENT_JOB } from "../../../redux/actions";
 import Portal from "../../Portal/Portal";
 import Submit from "../../Inputs/Submit/Submit";
 import styles from "./EditDesc.sass";
 import Text from "../../Inputs/Text/Text";
 import TextArea from "../../TextArea/TextArea";
+import { DatabaseContext } from "../../../";
+import { toFirestore } from "../../../core/utilities";
 
 const EditDesc = ({
   title,
@@ -15,11 +16,13 @@ const EditDesc = ({
   setIsHidden,
   getNode,
   currentJob,
-  setJobs,
   setCurrentJob,
+  userData,
+  setUserData,
 }) => {
   const [newTitle, setNewTitle] = useState({ value: title, error: "" });
   const [newDesc, setNewDesc] = useState({ value: desc, error: "" });
+  const database = useContext(DatabaseContext);
   const node = useRef();
 
   const _handleOnClick = (event) => {
@@ -31,10 +34,28 @@ const EditDesc = ({
       desc: newDesc.value,
     };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
 
     setIsHidden(!isHidden);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...userData,
+              jobs: toFirestore(userData.jobs), // Cannot store a map
+            });
+        });
+      });
   };
 
   useEffect(() => {
@@ -83,13 +104,16 @@ const EditDesc = ({
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
-        type: SET_JOBS,
+        type: SET_USER_DATA,
         payload,
       });
     },

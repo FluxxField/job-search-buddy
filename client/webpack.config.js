@@ -1,7 +1,15 @@
 const path = require("path");
+// const fs = require("fs");
 
 const SRC_DIR = path.join(__dirname, "src");
 const DIST_DIR = path.join(__dirname, "public");
+
+// var nodeModules = {};
+// fs.readdirSync(path.resolve(__dirname, "node_modules"))
+//   .filter((x) => [".bin"].indexOf(x) === -1)
+//   .forEach((mod) => {
+//     nodeModules[mod] = `commonjs ${mod}`;
+//   });
 
 module.exports = {
   mode: "development",
@@ -57,4 +65,5 @@ module.exports = {
       },
     ],
   },
+  // externals: nodeModules,
 };

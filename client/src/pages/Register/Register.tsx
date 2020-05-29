@@ -18,6 +18,8 @@ const Register = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
+  console.log("Register");
+
   const _handleOnClick = (event: IEvent) => {
     event.preventDefault();
     history.push(`${match.path}/${event.target.textContent.toLowerCase()}`);

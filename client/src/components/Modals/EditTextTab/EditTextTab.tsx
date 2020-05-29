@@ -1,9 +1,11 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef, useContext } from "react";
 import { connect } from "react-redux";
-import { SET_CURRENT_JOB, SET_JOBS } from "../../../redux/actions";
+import { SET_CURRENT_JOB, SET_USER_DATA } from "../../../redux/actions";
 import TextForm from "../AddTab/TextForm/TextForm";
 import Portal from "../../Portal/Portal";
 import styles from "./EditTextTab.sass";
+import { DatabaseContext } from "../../..";
+import { toFirestore } from "../../../core/utilities";
 
 const EditTextTab = ({
   id,
@@ -14,7 +16,8 @@ const EditTextTab = ({
   getNode,
   currentJob,
   setCurrentJob,
-  setJobs,
+  userData,
+  setUserData,
 }) => {
   const [title, setTitle] = useState({
     value: currentJob.tabs[id].title,
@@ -24,6 +27,7 @@ const EditTextTab = ({
     value: currentJob.tabs[id].desc,
     error: "",
   });
+  const database = useContext(DatabaseContext);
   const node = useRef();
 
   const _handleOnSubmitTextForm = (event) => {
@@ -39,8 +43,9 @@ const EditTextTab = ({
 
     const newCurrentJob = { ...currentJob, tabs: newTabsArray };
 
+    userData.jobs.set(newCurrentJob.id, newCurrentJob);
+    setUserData(userData);
     setCurrentJob(newCurrentJob);
-    setJobs(newCurrentJob);
 
     switch (displayTabs.length) {
       case 1:
@@ -66,6 +71,23 @@ const EditTextTab = ({
     }
 
     setIsHidden(!isHidden);
+
+    database
+      .collection("users")
+      .where("uid", "==", userData.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection("users")
+            .doc(doc.id)
+            .update({
+              ...doc.data(),
+              ...userData,
+              jobs: toFirestore(userData.jobs), // Cannot store a map
+            });
+        });
+      });
   };
 
   useEffect(() => {
@@ -91,13 +113,16 @@ const EditTextTab = ({
   );
 };
 
-const mapStateToProps = ({ currentJob }) => ({ currentJob });
+const mapStateToProps = ({ currentJob, userData }) => ({
+  currentJob,
+  userData,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setJobs: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
-        type: SET_JOBS,
+        type: SET_USER_DATA,
         payload,
       });
     },

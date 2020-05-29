@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext } from "react";
 import { connect } from "react-redux";
 import { SET_USER_DATA } from "../../../redux/actions";
 import { useHistory } from "react-router-dom";
@@ -7,6 +7,7 @@ import Text from "../../../components/Inputs/Text/Text";
 import Submit from "../../../components/Inputs/Submit/Submit";
 import { emailValidator, passwordValidator } from "../../../core/utilities";
 import { loginUser } from "../../../core/auth-api";
+import { DatabaseContext } from "../../../";
 import styles from "./Login.sass";
 
 interface IEvent {
@@ -19,15 +20,16 @@ interface IConnectStore {
 
 interface ILoginProps {
   userData: object;
-  setUserDataDispatch: any;
+  setUserData: any;
 }
 
-const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
+const Login = ({ userData, setUserData }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
   const [error, setError] = useState("");
   const history = useHistory();
+  const database = useContext(DatabaseContext);
 
   const _handleOnClick = (event: IEvent) => {
     event.preventDefault();
@@ -50,7 +52,7 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
 
     setLoading(true);
 
-    const response = await loginUser({
+    const response: any = await loginUser({
       email: email.value,
       password: password.value,
     });
@@ -62,9 +64,11 @@ const Login = ({ userData, setUserDataDispatch }: ILoginProps) => {
       return;
     }
 
-    setUserDataDispatch({
+    setUserData({
       ...userData,
-      ...response,
+      uid: response.user.uid,
+      displayName: response.user.displayName,
+      email: response.user.email,
     });
 
     history.push("/dashboard");
@@ -117,7 +121,7 @@ const mapStateToProps = ({ userData }: IConnectStore) => ({ userData });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setUserDataDispatch: (payload: any) => {
+    setUserData: (payload: any) => {
       dispatch({
         type: SET_USER_DATA,
         payload,

@@ -1,9 +1,9 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { connect } from "react-redux";
 import DashboardJob from "../../../components/DashboardJob/DashboardJob";
 import styles from "./Overview.sass";
 
-const Overview = ({ jobs }) => (
+const Overview = ({ userData }) => (
   <>
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -11,22 +11,23 @@ const Overview = ({ jobs }) => (
       </div>
 
       <div className={styles.body}>
-        {[...jobs].map(([key, job]) => (
-          <DashboardJob
-            key={key}
-            lastBox={false}
-            job={job}
-            id={job.id}
-            title={job.title}
-            tabs={job.tabs}
-          />
-        ))}
+        {userData.jobs &&
+          [...userData.jobs].map(([key, job]) => (
+            <DashboardJob
+              key={key}
+              lastBox={false}
+              job={job}
+              id={job.id}
+              title={job.title}
+              tabs={job.tabs}
+            />
+          ))}
         <DashboardJob lastBox={true} />
       </div>
     </div>
   </>
 );
 
-const mapStateToProsp = ({ jobs }) => ({ jobs });
+const mapStateToProsp = ({ userData }) => ({ userData });
 
 export default connect(mapStateToProsp)(memo(Overview));

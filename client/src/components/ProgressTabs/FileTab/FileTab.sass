@@ -20,18 +20,15 @@
   margin-top: -6%
   padding: 16px
   grid-area: body
-  overflow-y: auto
   border: 1px solid black
   display: flex
   flex-direction: column
   background-color: #7a7583
   border-radius: 25px
-  scrollbar-width: thin
 
 .header
   +flexCenter()
   width: 100%
-  grid-area: header
 
   h1
     margin: 0px
@@ -39,7 +36,8 @@
 .file
   display: flex
   place-items: center
-  height: 100%
+  overflow: auto
+  scrollbar-width: thin
 
 .footer
   +flexCenter()
